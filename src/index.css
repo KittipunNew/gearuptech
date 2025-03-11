@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .shopnow {
+  position: absolute;
+  top: 70%;
+  left: 32.5%;
+  transform: translate(-50%, -50%);
+} */
