@@ -47,17 +47,17 @@ const Navbar = () => {
       </div>
       <div className="hidden lg:block">
         <ul className="flex gap-5 font-bold">
-          <li>หน้าหลัก</li>
-          <li>คอมพิวเตอร์</li>
-          <li>โน้ตบุ๊ค</li>
-          <li>อุปกรณ์เสริม</li>
-          <li>เกมมิ่งเกียร์</li>
+          <li>Home</li>
+          <li>Computer</li>
+          <li>Notebook</li>
+          <li>Accessories</li>
+          <li>Monitors</li>
         </ul>
       </div>
       <div className="relative flex gap-10">
         <div className="hidden lg:block">
           <label className="input input-bordered flex items-center gap-2 text-black">
-            <input type="text" className="grow" placeholder="ค้นหา" />
+            <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

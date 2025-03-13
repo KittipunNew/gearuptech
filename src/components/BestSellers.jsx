@@ -1,24 +1,63 @@
+import { useContext } from 'react';
+import ProductCard from './ProductCard';
+import { ShopDataContext } from '../context/ShopContext';
+
+// Import Swiper React components
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+
+// import required modules
+import { Pagination } from 'swiper/modules';
+
 const BestSellers = () => {
+  const { BestSellerProducts } = useContext(ShopDataContext);
   return (
-    <div className="hidden md:block">
-      <img
-        src={ItemHeroImg1}
-        alt=""
-        className="hidden md:block w-[400px] lg:w-[400px] xl:w-[500px] absolute top-[300px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
-      />
-      <div className="absolute inset-0 bottom-[150px] flex flex-col justify-center items-center text-white uppercase">
-        <h1 className="text-xl md:text-4xl lg:text-4xl xl:text-5xl">
-          Xlite x6 GAMING keyboard
+    <div className="uppercase">
+      <div className="flex flex-col md:flex-row justify-between md:items-center my-5">
+        <h1 className=" text-lime-500 font-bold text-xl md:text-3xl lg:text-4xl">
+          Best <span className="text-black">Sellers</span> <br />{' '}
+          <span className="text-xs text-gray-400">
+            Good quality products, special prices, only here.
+          </span>
         </h1>
-        <h1 className="text-3xl text-center font-bold md:text-6xl lg:text-5xl xl:text-6xl">
-          tune up <br />
-          your game
-        </h1>
+        <a href="#" className="font-bold hover:scale-125 duration-200">
+          View more<span className="text-xl text-red-500">▸</span>
+        </a>
       </div>
-      <button className="absolute bottom-8 left-1/2 -translate-x-1/2 -translate-y-1/2 btn md:btn-lg mt-32">
-        SHOP NOW
-        <span className="text-xl text-red-500">▸</span>
-      </button>
+      {/* slide product card for mobile screen */}
+      <div className="md:hidden">
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={20}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination]}
+        >
+          {BestSellerProducts.map((item, index) => (
+            <SwiperSlide key={index}>
+              <div>
+                <ProductCard
+                  img={item.img}
+                  name={item.name}
+                  price={item.price}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+      {/* product card for tablet & desktop screen */}
+      <div className="hidden md:gap-5 md:grid grid-cols-3 xl:grid-cols-4">
+        {BestSellerProducts.map((item, index) => (
+          <div key={index}>
+            <ProductCard img={item.img} name={item.name} price={item.price} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

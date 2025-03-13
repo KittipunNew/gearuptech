@@ -18,6 +18,7 @@ import 'swiper/css/effect-fade';
 import ScrollReveal from 'scrollreveal';
 
 const Hero = () => {
+  // animation scroll config
   useEffect(() => {
     ScrollReveal().reveal('.aos', {
       delay: 100,
@@ -30,6 +31,7 @@ const Hero = () => {
   return (
     <>
       <Swiper
+        // banner slide config
         effect="fade"
         fadeEffect={{ crossFade: true }}
         spaceBetween={0}
@@ -51,11 +53,6 @@ const Hero = () => {
 
             {/* Mobile */}
             <div className="absolute inset-0 p-5 flex flex-col items-center justify-center text-white md:hidden">
-              <img
-                src={ItemHeroImg1}
-                alt=""
-                className="hidden md:block w-[300px] lg:w-[400px] xl:w-[500px]"
-              />
               <div className="flex flex-col justify-center items-center uppercase md:items-start">
                 <h1 className="text-xl md:text-3xl lg:text-4xl xl:text-5xl">
                   Xlite x6 GAMING keyboard
