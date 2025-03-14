@@ -16,14 +16,14 @@ const BestSellers = () => {
   const { BestSellerProducts } = useContext(ShopDataContext);
   return (
     <div className="uppercase">
-      <div className="flex flex-col md:flex-row justify-between md:items-center my-5">
+      <div className="flex justify-between md:items-center my-5">
         <h1 className=" text-lime-500 font-bold text-xl md:text-3xl lg:text-4xl">
-          Best <span className="text-black">Sellers</span> <br />{' '}
-          <span className="text-xs text-gray-400">
+          Best <span className=" text-black">Sellers</span> <br />{' '}
+          <span className="hidden text-xs text-gray-400 md:block">
             Good quality products, special prices, only here.
           </span>
         </h1>
-        <a href="#" className="font-bold hover:scale-125 duration-200">
+        <a href="#" className="font-bold md:hover:scale-125 duration-200">
           View more<span className="text-xl text-red-500">▸</span>
         </a>
       </div>

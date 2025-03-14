@@ -17,21 +17,27 @@ const PoppularBrands = () => {
         style={{ clipPath: 'polygon(0 100%, 80% 100%, 100% 0, 0 0)' }}
       ></div>
       <div className="border-b-2 border-t-2 py-10 uppercase flex flex-col gap-14 lg:flex-row">
-        <h1 className="font-bold flex gap-1 md:flex-col">
+        <h1 className="font-bold flex gap-1 md:flex-col xl:text-3xl">
           shop by
           <br /> <p className="text-lime-500">popular brands</p>
         </h1>
         {/* slide brands logo for mobile & tablet screen */}
-        <div className="mb-10 md:mx-40 lg:hidden">
-          <Swiper spaceBetween={80} className="mySwipe">
+        <div className="mb-10 lg:hidden w-full">
+          <Swiper spaceBetween={80} className="mySwipe w-full">
             <SwiperSlide>
-              <img src={nvidiaLogo} alt="" />
+              <div className="flex justify-center items-center">
+                <img src={nvidiaLogo} alt="" className="w-40 md:w-80" />
+              </div>
             </SwiperSlide>
             <SwiperSlide>
-              <img src={corsairLogo} alt="" />
+              <div className="flex justify-center items-center">
+                <img src={corsairLogo} alt="" className="w-40 md:w-80" />
+              </div>
             </SwiperSlide>
             <SwiperSlide>
-              <img src={msiLogo} alt="" />
+              <div className="flex justify-center items-center">
+                <img src={msiLogo} alt="" className="w-40 md:w-80" />
+              </div>
             </SwiperSlide>
           </Swiper>
         </div>
