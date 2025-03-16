@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import ProductCard from './ProductCard';
 import { ShopDataContext } from '../context/ShopContext';
+import { Link } from 'react-router-dom';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -23,9 +24,12 @@ const BestSellers = () => {
             Good quality products, special prices, only here.
           </span>
         </h1>
-        <a href="#" className="font-bold md:hover:scale-125 duration-200">
+        <Link
+          to="/productlist"
+          className="font-bold md:hover:scale-125 duration-200"
+        >
           View more<span className="text-xl text-red-500">▸</span>
-        </a>
+        </Link>
       </div>
       {/* slide product card for mobile screen */}
       <div className="md:hidden">

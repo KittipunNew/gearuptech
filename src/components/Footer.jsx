@@ -83,43 +83,20 @@ const Footer = () => {
             Nakhon Pathom, Mueang Nakhon Pathom, <br />
             Sam Kwai Phuek 73000
           </h1>
-          <p>Mon – Fri: 9am – 5pm</p>
+          <p>Mon – Fri: 9.00am – 5.00pm</p>
           <div className="flex gap-2">
-            <box-icon
-              name="facebook-square"
-              type="logo"
-              color="#ffffff"
-            ></box-icon>
-            <box-icon
-              name="instagram-alt"
-              type="logo"
-              color="#ffffff"
-            ></box-icon>
-            <box-icon name="tiktok" type="logo" color="#ffffff"></box-icon>
+            <i className="bx bxl-facebook-square text-white text-2xl"></i>
+            <i className="bx bxl-instagram-alt text-white text-2xl"></i>
+            <i className="bx bxl-tiktok text-white text-2xl"></i>
           </div>
         </div>
       </div>
       <div className="flex justify-between items-center p-10">
         <h1>© 2025 GearUp Tech | All Rights Reserved.</h1>
         <div className="flex gap-3">
-          <box-icon
-            name="visa"
-            type="logo"
-            color="#ffffff"
-            size="md"
-          ></box-icon>
-          <box-icon
-            name="mastercard"
-            type="logo"
-            color="#ffffff"
-            size="md"
-          ></box-icon>
-          <box-icon
-            name="paypal"
-            type="logo"
-            color="#ffffff"
-            size="md"
-          ></box-icon>
+          <i className="bx bxl-visa bx-md text-white text-2xl"></i>
+          <i className="bx bxl-mastercard bx-md text-white text-2xl"></i>
+          <i className="bx bxl-paypal bx-md text-white text-2xl"></i>
         </div>
       </div>
     </div>

@@ -18,6 +18,7 @@
     "boxicons": "^2.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.3.0",
     "scrollreveal": "^4.0.9",
     "swiper": "^11.2.5"
   },

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 // images
 import BgHeroImg1 from '../assets/banner1/bg.png';
@@ -61,10 +62,10 @@ const Hero = () => {
                   tune up <br />
                   your game
                 </h1>
-                <button className="btn md:btn-lg mt-5">
+                <Link to="/productlist" className="btn md:btn-lg mt-5">
                   SHOP NOW
                   <span className="text-xl text-red-500">▸</span>
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -84,10 +85,13 @@ const Hero = () => {
                   your game
                 </h1>
               </div>
-              <button className="aos absolute bottom-8 left-1/2 -translate-x-1/2 -translate-y-1/2 btn md:btn-lg mt-32 lg:bottom-20">
+              <Link
+                to="/productlist"
+                className="aos absolute bottom-8 left-1/2 -translate-x-1/2 -translate-y-1/2 btn md:btn-lg mt-32 lg:bottom-20"
+              >
                 SHOP NOW
                 <span className="text-xl text-red-500">▸</span>
-              </button>
+              </Link>
             </div>
           </div>
         </SwiperSlide>
@@ -114,10 +118,10 @@ const Hero = () => {
                   Focuses on clear sound <br />
                   wireless convenience
                 </h1>
-                <button className="btn md:btn-lg mt-5">
+                <Link to="/productlist" className="btn md:btn-lg mt-5">
                   SHOP NOW
                   <span className="text-xl text-red-500">▸</span>
-                </button>
+                </Link>
               </div>
             </div>
           </div>

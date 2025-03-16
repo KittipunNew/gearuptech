@@ -1,6 +1,9 @@
-import 'boxicons';
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+
 import logoImg from '../assets/logo.png';
+
+import 'boxicons';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(2);
@@ -32,26 +35,44 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black"
+            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black font-bold text-xl space-y-5"
           >
             <li>
-              <a>Item 1</a>
+              <NavLink to="/">Home</NavLink>
             </li>
             <li>
-              <a>Item 2</a>
+              <NavLink to="/productlist">All Products</NavLink>
+            </li>
+            <li>
+              <a>Computer</a>
+            </li>
+            <li>
+              <a>Notebook</a>
+            </li>
+            <li>
+              <a>Monitors</a>
+            </li>
+            <li>
+              <a>Accessories</a>
+            </li>
+            <li>
+              <a>Network</a>
             </li>
           </ul>
         </div>
         {/* LOGO */}
-        <img src={logoImg} alt="" className="w-28 lg:w-40" />
+        <Link to="/">
+          <img src={logoImg} alt="" className="w-28 lg:w-40" />
+        </Link>
       </div>
       <div className="hidden lg:block">
         <ul className="flex gap-5 font-bold">
-          <li>Home</li>
+          <NavLink to="/">Home</NavLink>
           <li>Computer</li>
           <li>Notebook</li>
-          <li>Accessories</li>
           <li>Monitors</li>
+          <li>Accessories</li>
+          <li>Network</li>
         </ul>
       </div>
       <div className="relative flex gap-10">
