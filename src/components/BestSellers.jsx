@@ -37,6 +37,7 @@ const BestSellers = () => {
           slidesPerView={1}
           spaceBetween={20}
           pagination={{
+            el: '.custom-pagination',
             clickable: true,
           }}
           modules={[Pagination]}
@@ -53,13 +54,14 @@ const BestSellers = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        <div className="custom-pagination mt-2 flex justify-center"></div>
       </div>
       {/* product card for tablet & desktop screen */}
       <div className="hidden md:gap-5 md:grid grid-cols-3 xl:grid-cols-4">
         {BestSellerProducts.map((item, index) => (
-          <div key={index}>
+          <Link to={`/productdetail/${item.id}`} key={index}>
             <ProductCard img={item.img} name={item.name} price={item.price} />
-          </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -7,6 +7,8 @@ import ProductsList from './pages/ProductsList';
 
 import 'boxicons/css/boxicons.min.css';
 import Layout from './layout/Layout';
+import ProductDetail from './pages/ProductDetail';
+import CategoryPage from './pages/CategoryPage';
 
 const App = () => {
   return (
@@ -14,11 +16,13 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/productlist" element={<ProductsList />} />
+        <Route path="/productlist/:category" element={<CategoryPage />} />
         <Route
-          path="/productlist"
+          path="/productdetail/:id"
           element={
             <Layout>
-              <ProductsList />
+              <ProductDetail />
             </Layout>
           }
         />

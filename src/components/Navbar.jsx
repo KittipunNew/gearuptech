@@ -68,11 +68,11 @@ const Navbar = () => {
       <div className="hidden lg:block">
         <ul className="flex gap-5 font-bold">
           <NavLink to="/">Home</NavLink>
-          <li>Computer</li>
-          <li>Notebook</li>
-          <li>Monitors</li>
-          <li>Accessories</li>
-          <li>Network</li>
+          <NavLink to="/productlist/computer">Computer</NavLink>
+          <NavLink to="/productlist/notebook">Notebook</NavLink>
+          <NavLink to="/productlist/monitor">Monitors</NavLink>
+          <NavLink to="/productlist/accessories">Accessories</NavLink>
+          <NavLink to="/productlist/network">Network</NavLink>
         </ul>
       </div>
       <div className="relative flex gap-10">
