@@ -10,6 +10,8 @@ import Layout from './layout/Layout';
 import ProductDetail from './pages/ProductDetail';
 import CategoryPage from './pages/CategoryPage';
 
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const App = () => {
   return (
     <div className="font-rajdhani">

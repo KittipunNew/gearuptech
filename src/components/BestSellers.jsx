@@ -14,7 +14,9 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 
 const BestSellers = () => {
-  const { BestSellerProducts } = useContext(ShopDataContext);
+  const { products } = useContext(ShopDataContext);
+
+  const bestSeller = products.filter((item) => item.bestseller === true);
   return (
     <div className="uppercase">
       <div className="flex justify-between md:items-center my-5">
@@ -42,11 +44,11 @@ const BestSellers = () => {
           }}
           modules={[Pagination]}
         >
-          {BestSellerProducts.map((item, index) => (
+          {bestSeller.map((item, index) => (
             <SwiperSlide key={index}>
               <div>
                 <ProductCard
-                  img={item.img}
+                  img={item.images[0]}
                   name={item.name}
                   price={item.price}
                 />
@@ -58,9 +60,13 @@ const BestSellers = () => {
       </div>
       {/* product card for tablet & desktop screen */}
       <div className="hidden md:gap-5 md:grid grid-cols-3 xl:grid-cols-4">
-        {BestSellerProducts.map((item, index) => (
+        {bestSeller.map((item, index) => (
           <Link to={`/productdetail/${item.id}`} key={index}>
-            <ProductCard img={item.img} name={item.name} price={item.price} />
+            <ProductCard
+              img={item.images[0]}
+              name={item.name}
+              price={item.price}
+            />
           </Link>
         ))}
       </div>
