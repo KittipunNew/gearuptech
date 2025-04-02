@@ -20,14 +20,14 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/productlist" element={<ProductsList />} />
         <Route path="/productlist/:category" element={<CategoryPage />} />
-        <Route
+        {/* <Route
           path="/productdetail/:id"
           element={
             <Layout>
               <ProductDetail />
             </Layout>
           }
-        />
+        /> */}
       </Routes>
       <Footer />
     </div>

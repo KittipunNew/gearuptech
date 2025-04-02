@@ -1,6 +1,19 @@
 import { useState } from 'react';
-const FilterProduct = () => {
-  const [selectedOption, setSelectedOption] = useState('Relevance');
+const FilterProduct = ({ setFilterProduct }) => {
+  const [searchInput, setSearchInput] = useState('');
+  const [sort, setSort] = useState('Relevance');
+  const [startPrice, setStartPrice] = useState('');
+  const [endPrice, setEndPrice] = useState('');
+
+  const handleStartPrice = (e) => {
+    const price = e.target.value.replace(/[^0-9]/g, '');
+    setStartPrice(price);
+  };
+
+  const handleEndPrice = (e) => {
+    const price = e.target.value.replace(/[^0-9]/g, '');
+    setEndPrice(price);
+  };
   return (
     <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start">
       {/* Mobile & Tablet Screen */}
@@ -48,8 +61,8 @@ const FilterProduct = () => {
               <h1 className="font-medium">Sort by:</h1>
               <select
                 className="select select-bordered w-52"
-                value={selectedOption}
-                onChange={(e) => setSelectedOption(e.target.value)}
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
               >
                 <option value="Relevance">Relevance</option>
                 <option value="Price (Low - High)">Price (Low - High)</option>
@@ -64,12 +77,16 @@ const FilterProduct = () => {
                   type="text"
                   placeholder="฿"
                   className="input input-bordered w-full max-w-xs"
+                  value={startPrice}
+                  onChange={handleStartPrice}
                 />
                 <h1>-</h1>
                 <input
                   type="text"
                   placeholder="฿"
                   className="input input-bordered w-full max-w-xs"
+                  value={endPrice}
+                  onChange={handleEndPrice}
                 />
               </div>
             </div>
@@ -184,12 +201,16 @@ const FilterProduct = () => {
                 type="text"
                 placeholder="฿"
                 className="input input-bordered w-full max-w-xs"
+                value={startPrice}
+                onChange={handleStartPrice}
               />
               <h1>-</h1>
               <input
                 type="text"
                 placeholder="฿"
                 className="input input-bordered w-full max-w-xs"
+                value={endPrice}
+                onChange={handleEndPrice}
               />
             </div>
           </div>

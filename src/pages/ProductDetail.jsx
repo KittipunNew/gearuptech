@@ -16,9 +16,9 @@ import ProductCard from './../components/ProductCard';
 const ProductDetail = () => {
   const { id } = useParams();
 
-  const { allProduct } = useContext(ShopDataContext);
+  const { products } = useContext(ShopDataContext);
 
-  const product = allProduct.find((item) => item.id === parseInt(id));
+  const product = products.find((item) => item.id === parseInt(id));
 
   const [productCount, setProductCount] = useState(0);
 
