@@ -11,7 +11,7 @@ import amdLogo from '../assets/brands/amd-logo.png';
 
 const Marquee = () => {
   return (
-    <div>
+    <div className="pb-20">
       <Swiper
         spaceBetween={20} // ระยะห่างระหว่างสไลด์
         slidesPerView={3} // จำนวนสไลด์ที่แสดง

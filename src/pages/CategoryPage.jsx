@@ -1,70 +1,72 @@
-import { useParams } from 'react-router-dom';
-import FilterProduct from './../components/FilterProduct';
 import ProductCard from '../components/ProductCard';
-import { ShopDataContext } from '../context/ShopContext';
 import { useContext } from 'react';
+import { ShopDataContext } from '../context/ShopContext';
+import { useParams, Link } from 'react-router-dom';
 import Layout from '../layout/Layout';
-import { Link } from 'react-router-dom';
 
 const CategoryPage = () => {
   const { category } = useParams();
-  const { allProduct } = useContext(ShopDataContext);
+  const { products } = useContext(ShopDataContext);
 
-  const products = allProduct.filter((item) => item.category === category);
+  const productCategory = products.filter((item) => item.category === category);
+
   return (
     <>
       <div className="flex flex-col lg:flex-row gap-2 lg:mt-5">
-        <div className="px-5 md:px-10 lg:px-0">
-          <FilterProduct />
-        </div>
-        {/* Mobile & Tablet Screen */}
-        <div className="lg:hidden">
+        {/* Mobile & Tablet */}
+        <div className="lg:hidden my-10">
           <Layout>
-            <div className="flex gap-2">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {products.length > 0 ? (
-                  products.map((item) => (
-                    <Link to={`/productdetail/${item.id}`} key={item.id}>
-                      <ProductCard
-                        img={
-                          Array.isArray(item.img) && item.img.length > 0
-                            ? item.img[0]
-                            : item.img
-                        }
-                        name={item.name}
-                        price={item.price}
-                      />
-                    </Link>
-                  ))
-                ) : (
-                  <p>No products found in this category.</p>
-                )}
-              </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {productCategory.length > 0 ? (
+                productCategory.map((item) => (
+                  <Link to={`/productdetail/${item._id}`} key={item._id}>
+                    <ProductCard
+                      img={
+                        Array.isArray(item.images) && item.images.length > 0
+                          ? item.images[0]
+                          : item.images
+                      }
+                      name={item.name}
+                      price={item.price}
+                    />
+                  </Link>
+                ))
+              ) : (
+                <p>No products found in this category.</p>
+              )}
             </div>
           </Layout>
         </div>
-        {/* Desktop Screen */}
-        <div className="hidden lg:grid grid-cols-3 xl:grid-cols-5 gap-3">
-          {products.length > 0 ? (
-            products.map((item) => (
-              <Link to={`/productdetail/${item.id}`} key={item.id}>
-                <ProductCard
-                  img={
-                    Array.isArray(item.img) && item.img.length > 0
-                      ? item.img[0]
-                      : item.img
-                  }
-                  name={item.name}
-                  price={item.price}
-                />
-              </Link>
-            ))
-          ) : (
-            <p>No products found in this category.</p>
-          )}
+
+        {/* Desktop */}
+        <div className="hidden lg:flex flex-col p-20 gap-10">
+          <h1 className="text-2xl font-bold">
+            {category.toUpperCase()}
+            <span className="text-gray-400">({productCategory.length})</span>
+          </h1>
+          <div className=" lg:grid grid-cols-3 xl:grid-cols-5 gap-3">
+            {productCategory.length > 0 ? (
+              productCategory.map((item) => (
+                <Link to={`/productdetail/${item._id}`} key={item._id}>
+                  <ProductCard
+                    img={
+                      Array.isArray(item.images) && item.images.length > 0
+                        ? item.images[0]
+                        : item.images
+                    }
+                    name={item.name}
+                    price={item.price}
+                  />
+                </Link>
+              ))
+            ) : (
+              <p>No products found in this category.</p>
+            )}
+          </div>
         </div>
       </div>
     </>
   );
 };
+
 export default CategoryPage;

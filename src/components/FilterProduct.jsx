@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 const FilterProduct = ({ setFilterProduct }) => {
   const [searchInput, setSearchInput] = useState('');
   const [sort, setSort] = useState('Relevance');
   const [startPrice, setStartPrice] = useState('');
   const [endPrice, setEndPrice] = useState('');
+  const [categories, setCategories] = useState([]);
 
+  // Update filters
+  useEffect(() => {
+    const filter = {
+      searchInput,
+      sort,
+      priceRange: {
+        start: startPrice,
+        end: endPrice,
+      },
+      categories,
+    };
+    setFilterProduct(filter);
+  }, [searchInput, sort, startPrice, endPrice, categories]);
+
+  // Price input
   const handleStartPrice = (e) => {
     const price = e.target.value.replace(/[^0-9]/g, '');
     setStartPrice(price);
@@ -14,65 +31,85 @@ const FilterProduct = ({ setFilterProduct }) => {
     const price = e.target.value.replace(/[^0-9]/g, '');
     setEndPrice(price);
   };
-  return (
-    <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start">
-      {/* Mobile & Tablet Screen */}
-      <div className="w-full flex flex-col justify-center items-center m-3 gap-5 lg:hidden">
-        {/* Search */}
-        <label className="input input-bordered flex items-center gap-2">
-          <input type="text" className="grow" placeholder="Search" />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="h-4 w-4 opacity-70"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-              clipRule="evenodd"
-            />
-          </svg>
+
+  // Category checkbox
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    setCategories((prev) =>
+      e.target.checked
+        ? [...prev, value]
+        : prev.filter((category) => category !== value)
+    );
+  };
+
+  // Clear all filters
+  const handleClear = () => {
+    setSearchInput('');
+    setSort('Relevance');
+    setStartPrice('');
+    setEndPrice('');
+    setCategories([]);
+  };
+
+  // ใช้ซ้ำได้ทั้ง mobile และ desktop
+  const renderCategoryCheckboxes = () => (
+    <>
+      {[
+        { label: 'Computer', value: 'pc' },
+        { label: 'Notebook', value: 'notebook' },
+        { label: 'Monitors', value: 'monitor' },
+        { label: 'Accessories', value: 'accessorie' },
+        { label: 'Network', value: 'network' },
+      ].map((item) => (
+        <label key={item.value} className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            className="checkbox item"
+            value={item.value}
+            checked={categories.includes(item.value)}
+            onChange={handleCategoryChange}
+          />
+          <span>{item.label}</span>
         </label>
-        {/* Sort & Filter */}
-        <div className="collapse collapse-arrow bg-base-200">
+      ))}
+    </>
+  );
+
+  return (
+    <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:w-60 h-full bg-white rounded-lg shadow-lg">
+      {/* Mobile & Tablet */}
+      <div className="w-full flex flex-col justify-center items-center m-3 gap-5 lg:hidden">
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          🔍
+        </label>
+
+        <div className="collapse collapse-arrow bg-base-200 bg-white">
           <input type="checkbox" />
           <div className="collapse-title text-xl font-medium flex gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
-              />
-            </svg>
-
-            <h1>Sort & Filter</h1>
+            ⚙️ Sort & Filter
           </div>
-          <div className="collapse-content flex flex-col justify-center items-start gap-5">
-            {/* Sort by */}
-            <div className="flex items-center w-full gap-5">
-              <h1 className="font-medium">Sort by:</h1>
-              <select
-                className="select select-bordered w-52"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-              >
-                <option value="Relevance">Relevance</option>
-                <option value="Price (Low - High)">Price (Low - High)</option>
-                <option value="Price (High - Low)">Price (High - Low)</option>
-              </select>
-            </div>
-            {/* Price range */}
+          <div className="collapse-content flex flex-col gap-5">
+            <select
+              className="select select-bordered w-52"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="Relevance">Relevance</option>
+              <option value="Price (Low - High)">Price (Low - High)</option>
+              <option value="Price (High - Low)">Price (High - Low)</option>
+            </select>
+
+            {/* Price Range */}
             <div className="w-full flex flex-col gap-2">
               <h1 className="font-medium">Price range</h1>
-              <div className="flex justify-center items-center w-full gap-5">
+              <div className="flex justify-center items-center gap-5">
                 <input
                   type="text"
                   placeholder="฿"
@@ -90,113 +127,54 @@ const FilterProduct = ({ setFilterProduct }) => {
                 />
               </div>
             </div>
+
+            {/* Categories */}
             <div className="flex flex-col gap-2">
               <h1 className="font-medium">Categories</h1>
               <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox item"
-                    value="computer"
-                  />
-                  <span>Computer</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox item"
-                    value="notebook"
-                  />
-                  <span>Notebook</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox item"
-                    value="Monitor"
-                  />
-                  <span>Monitors</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox item"
-                    value="Accessorie"
-                  />
-                  <span>Accessories</span>
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    className="checkbox item"
-                    value="network"
-                  />
-                  <span>Network</span>
-                </label>
+                {renderCategoryCheckboxes()}
               </div>
             </div>
-            <div className="w-full flex justify-center my-5">
-              <button className="btn btn-wide btn-neutral">Clear all</button>
-            </div>
+
+            <button className="btn btn-wide btn-neutral" onClick={handleClear}>
+              Clear all
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Desktop Screen */}
+      {/* Desktop */}
       <div className="hidden lg:flex flex-col gap-5 w-full h-auto p-5">
-        <div className="text-xl font-medium flex gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
-            />
-          </svg>
+        <div className="text-xl font-medium flex gap-2">⚙️ Sort & Filter</div>
 
-          <h1>Sort & Filter</h1>
-        </div>
-        {/* Search */}
-        <div>
-          <label className="input input-bordered flex items-center gap-2">
-            <input type="text" className="grow" placeholder="Search" />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              className="h-4 w-4 opacity-70"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </label>
-        </div>
-        <div className="flex flex-col justify-center items-start gap-5">
-          {/* Sort by */}
-          <div className="flex flex-col w-full gap-5">
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          🔍
+        </label>
+
+        <div className="flex flex-col gap-5">
+          <div>
             <h1 className="font-medium">Sort by:</h1>
             <select
               className="select select-bordered w-52"
-              defaultValue="Relevance"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
             >
-              <option>Relevance</option>
-              <option>Price (Low - High)</option>
-              <option>Price (High - Low)</option>
+              <option value="Relevance">Relevance</option>
+              <option value="Price (Low - High)">Price (Low - High)</option>
+              <option value="Price (High - Low)">Price (High - Low)</option>
             </select>
           </div>
-          {/* Price range */}
+
           <div className="w-full flex flex-col gap-2">
             <h1 className="font-medium">Price range</h1>
-            <div className="flex justify-center items-center w-full gap-5">
+            <div className="flex justify-center items-center gap-5">
               <input
                 type="text"
                 placeholder="฿"
@@ -214,54 +192,17 @@ const FilterProduct = ({ setFilterProduct }) => {
               />
             </div>
           </div>
+
           <div className="flex flex-col gap-2">
             <h1 className="font-medium">Categories</h1>
             <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox item"
-                  value="computer"
-                />
-                <span>Computer</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox item"
-                  value="notebook"
-                />
-                <span>Notebook</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox item"
-                  value="Monitor"
-                />
-                <span>Monitors</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox item"
-                  value="Accessorie"
-                />
-                <span>Accessories</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="checkbox item"
-                  value="network"
-                />
-                <span>Network</span>
-              </label>
+              {renderCategoryCheckboxes()}
             </div>
           </div>
-          <div className="w-full flex justify-center my-5">
-            <button className="btn btn-wide btn-neutral">Clear all</button>
-          </div>
+
+          <button className="btn btn-wide btn-neutral" onClick={handleClear}>
+            Clear all
+          </button>
         </div>
       </div>
     </div>

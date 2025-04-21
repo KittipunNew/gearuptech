@@ -1,26 +1,24 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { ShopDataContext } from '../context/ShopContext';
 
-import img1 from '../assets/products/accessories/Adapter.png';
-import img2 from '../assets/products/accessories/Adapter1.png';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
-
 import { Pagination } from 'swiper/modules';
 import ProductCard from './../components/ProductCard';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const [productCount, setProductCount] = useState(0);
 
   const { products } = useContext(ShopDataContext);
 
-  const product = products.find((item) => item.id === parseInt(id));
+  const product = products.find((item) => item._id === id);
 
-  const [productCount, setProductCount] = useState(0);
+  const relatedProducts = products.filter(
+    (item) => item.category === product.category && item._id !== product._id
+  );
 
   function handleInputProductCount(e) {
     const value = e.target.value;
@@ -40,10 +38,10 @@ const ProductDetail = () => {
 
   return (
     <>
-      <div>
-        <div className="flex flex-col lg:flex-row lg:justify-start lg:items-center gap-3">
+      <div className="flex flex-col gap-10 lg:gap-20 pb-20">
+        <div className="flex flex-col lg:flex-row lg:justify-center lg:items-center gap-3">
           {/* image product slide */}
-          <div className="lg:w-96">
+          <div>
             <Swiper
               spaceBetween={20}
               pagination={{
@@ -51,10 +49,10 @@ const ProductDetail = () => {
                 clickable: true,
               }}
               modules={[Pagination]}
-              className="mySwiper"
+              className="mySwiper md:w-[500px]"
             >
-              {Array.isArray(product.img) ? (
-                product.img.map((image, index) => (
+              {Array.isArray(product.images) ? (
+                product.images.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className="flex justify-center items-center">
                       <img src={image} alt="" />
@@ -64,25 +62,31 @@ const ProductDetail = () => {
               ) : (
                 <SwiperSlide>
                   <div className="flex justify-center items-center">
-                    <img src={product.img} alt="product-image" />
+                    <img src={product.image} alt="product-image" />
                   </div>
                 </SwiperSlide>
               )}
             </Swiper>
             <div className="custom-pagination my-10 flex justify-center"></div>
           </div>
+
           {/* detail product */}
-          <div className="flex flex-col gap-5 lg:gap-20 lg:w-[600px] lg:mx-20">
+          <div className="flex flex-col gap-5 lg:gap-10 lg:w-[600px] lg:mx-20">
             <div className="flex flex-col gap-3">
               <h1 className="text-2xl text-lime-500 font-bold lg:hidden">
                 <span className="text-lg">฿</span>
-                {product.price}
+                {product.price.toLocaleString()}
               </h1>
               <h1 className="text-2xl font-bold">{product.name}</h1>
-              <p>{product.detail}</p>
-              <h1 className="hidden text-4xl text-lime-500 font-bold lg:block">
+              <p className="mb-5">{product.description}</p>
+              {product.specs.map((item, index) => (
+                <ul key={index} className="font-bold">
+                  <li>{item}</li>
+                </ul>
+              ))}
+              <h1 className="hidden text-4xl text-lime-500 font-bold lg:block mt-5">
                 <span className="text-3xl">฿</span>
-                {product.price}
+                {product.price.toLocaleString()}
               </h1>
             </div>
             <div className="flex justify-center items-center gap-1 w-52 md:w-80">
@@ -115,13 +119,19 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
+
         <div className="mt-10 flex flex-col gap-5">
           <h1 className="text-2xl font-bold">Related Products</h1>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-            <ProductCard img={img1} name="test" price="500" />
-            <ProductCard img={img1} name="test" price="500" />
-            <ProductCard img={img1} name="test" price="500" />
-            <ProductCard img={img1} name="test" price="500" />
+            {relatedProducts.slice(0, 4).map((item) => (
+              <Link to={`/productdetail/${item._id}`}>
+                <ProductCard
+                  img={item.images[0]}
+                  name={item.name}
+                  price={item.price.toLocaleString()}
+                />
+              </Link>
+            ))}
           </div>
         </div>
       </div>

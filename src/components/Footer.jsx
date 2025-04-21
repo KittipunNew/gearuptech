@@ -3,7 +3,7 @@ import { faPhoneVolume } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
   return (
-    <div className="bg-black text-white relative w-full mt-20">
+    <div className="bg-black text-white relative w-full">
       <div
         className="bg-black w-20 h-5 absolute -top-4 right-0"
         style={{ clipPath: 'polygon(0 100%, 100% 100%, 100% 0, 20% 0)' }}
@@ -12,7 +12,7 @@ const Footer = () => {
         className="bg-black w-20 h-5 absolute -top-4 left-0"
         style={{ clipPath: 'polygon(0 100%, 100% 100%, 80% 0, 0 0)' }}
       ></div>
-      <div className="flex flex-col justify-center items-center py-10 gap-10 md:flex-row">
+      <div className="flex flex-col justify-center items-center py-10 gap-10 md:flex-row md:px-10">
         <div className="flex justify-center items-center gap-5">
           <FontAwesomeIcon icon={faPhoneVolume} size="2x" />
           <div className="text-xl">

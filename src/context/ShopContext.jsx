@@ -11,7 +11,7 @@ export const ShopDataProvider = ({ children }) => {
     const fetchList = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/product`);
-        setProducts(response.data.products);
+        setProducts(response.data.products.reverse());
       } catch (err) {
         console.log(err);
         toast.error(err.message);

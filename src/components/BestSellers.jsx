@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import { ShopDataContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,31 @@ const BestSellers = () => {
   const { products } = useContext(ShopDataContext);
 
   const bestSeller = products.filter((item) => item.bestseller === true);
+
+  // เก็บค่าจำนวนรายการที่ต้องการแสดง
+  const [itemCount, setItemCount] = useState(0);
+
+  // ฟังก์ชั่นเงื่อนไขการแสดงรายการสินค้าว่าขนาดหน้าจอแต่ละขนาดควรแสดงกี่รายการ
+  useEffect(() => {
+    const updateItemCount = () => {
+      const width = window.innerWidth;
+      if (width >= 1281) {
+        setItemCount(8);
+      } else if (width >= 768) {
+        setItemCount(6);
+      } else {
+        setItemCount(0);
+      }
+    };
+
+    updateItemCount(); // call once on mount
+    window.addEventListener('resize', updateItemCount); // update on resize
+
+    return () => {
+      window.removeEventListener('resize', updateItemCount); // cleanup
+    };
+  }, []);
+
   return (
     <div className="uppercase">
       <div className="flex justify-between md:items-center my-5">
@@ -33,6 +58,7 @@ const BestSellers = () => {
           View more<span className="text-xl text-red-500">▸</span>
         </Link>
       </div>
+
       {/* slide product card for mobile screen */}
       <div className="md:hidden">
         <Swiper
@@ -47,21 +73,24 @@ const BestSellers = () => {
           {bestSeller.map((item, index) => (
             <SwiperSlide key={index}>
               <div>
-                <ProductCard
-                  img={item.images[0]}
-                  name={item.name}
-                  price={item.price}
-                />
+                <Link to={`/productdetail/${item._id}`} key={index}>
+                  <ProductCard
+                    img={item.images[0]}
+                    name={item.name}
+                    price={item.price}
+                  />
+                </Link>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
         <div className="custom-pagination mt-2 flex justify-center"></div>
       </div>
+
       {/* product card for tablet & desktop screen */}
       <div className="hidden md:gap-5 md:grid grid-cols-3 xl:grid-cols-4">
-        {bestSeller.map((item, index) => (
-          <Link to={`/productdetail/${item.id}`} key={index}>
+        {bestSeller.slice(0, itemCount).map((item, index) => (
+          <Link to={`/productdetail/${item._id}`} key={index}>
             <ProductCard
               img={item.images[0]}
               name={item.name}
