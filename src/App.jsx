@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -11,10 +13,12 @@ import ProductDetail from './pages/ProductDetail';
 import CategoryPage from './pages/CategoryPage';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import Register from './pages/Register';
 
 const App = () => {
   return (
     <div className="font-rajdhani">
+      <ToastContainer />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -25,6 +29,14 @@ const App = () => {
           element={
             <Layout>
               <ProductDetail />
+            </Layout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Layout>
+              <Register />
             </Layout>
           }
         />

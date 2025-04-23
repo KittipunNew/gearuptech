@@ -5,7 +5,9 @@ import { backendUrl } from '../App';
 export const TokenContext = createContext();
 
 export const TokenProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [token, setToken] = useState(
+    localStorage.getItem('token') || sessionStorage.getItem('token')
+  );
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 

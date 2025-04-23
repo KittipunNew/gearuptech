@@ -1,18 +1,50 @@
 import { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-
+import { toast } from 'react-toastify';
 import logoImg from '../assets/logo.png';
 
 import 'boxicons';
 import { ShopDataContext } from '../context/ShopContext';
 import { TokenContext } from '../context/TokenContext';
+import axios from 'axios';
+import { backendUrl } from '../App';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
 
   const { products } = useContext(ShopDataContext);
-  const { user } = useContext(TokenContext);
+  const { user, setToken } = useContext(TokenContext);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${backendUrl}/api/login`, {
+        username,
+        password,
+        remember,
+      });
+
+      if (response.data.success && response.data.role === 'user') {
+        localStorage.removeItem('token');
+        if (remember) {
+          localStorage.setItem('token', response.data.token);
+        } else {
+          sessionStorage.setItem('token', response.data.token);
+        }
+        setToken(response.data.token);
+        document.getElementById('modal_login').checked = false;
+      } else {
+        toast.error(response.data.message || 'You are not authorized');
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -151,9 +183,18 @@ const Navbar = () => {
             >
               {user ? (
                 <>
-                  <Link>
+                  <Link className="btn btn-ghost">
                     <li>Profile</li>
                   </Link>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => {
+                      localStorage.removeItem('token');
+                      setToken(null);
+                    }}
+                  >
+                    <li>Sign out</li>
+                  </button>
                 </>
               ) : (
                 <>
@@ -161,7 +202,7 @@ const Navbar = () => {
                   <label htmlFor="modal_login" className="btn btn-ghost">
                     Sign in
                   </label>
-                  <Link to="/register" className="hover:bg-base-300 p-2">
+                  <Link to="/register" className="btn btn-ghost">
                     <li>Sign up</li>
                   </Link>
                 </>
@@ -196,59 +237,75 @@ const Navbar = () => {
             </label>
           </div>
           <div className="flex flex-col items-center justify-center gap-10">
+            {/* Logo */}
             <div>
               <img src={logoImg} alt="" className="w-40" />
             </div>
+
             <div className="flex flex-col items-center justify-center gap-5">
-              <h1 className="font-bold text-center">
+              <h1 className="font-bold text-center text-xl">
                 Welcome to GearUp Online Store
               </h1>
-              <h2>Sign In</h2>
-              {/* username */}
-              <label className="input input-bordered flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-4 w-4 opacity-70 text-black"
-                >
-                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                </svg>
-                <input type="text" className="grow" placeholder="Username" />
-              </label>
-              {/* password */}
-              <label className="input input-bordered flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-4 w-4 opacity-70 text-black"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                    clipRule="evenodd"
+              <h2 className="font-bold text-xl">Sign In</h2>
+
+              <form
+                className="flex flex-col items-center justify-center gap-3"
+                onSubmit={handleLogin}
+              >
+                {/* username */}
+                <label className="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70 text-black"
+                  >
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                  </svg>
+                  <input
+                    type="text"
+                    className="grow text-black"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
-                </svg>
-                <input
-                  type="password"
-                  className="grow text-black"
-                  value="password"
-                />
-              </label>
-              <div className="form-control w-full">
-                <label className="cursor-pointer label">
+                </label>
+                {/* password */}
+                <label className="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70 text-black"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    type="password"
+                    className="grow text-black"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </label>
+                {/* Checkbox Remember me */}
+                <label className="cursor-pointer label flex items-center justify-start gap-5">
                   <input
                     type="checkbox"
-                    defaultChecked
                     className="checkbox checkbox-success"
+                    checked={remember}
+                    onChange={() => setRemember(!remember)}
                   />
                   <span className="label-text">Remember me</span>
                 </label>
-              </div>
-              <button className="btn btn-wide bg-lime-500 border-none text-white">
-                Sign In
-              </button>
+
+                <button className="btn btn-wide bg-lime-500 border-none text-white">
+                  Sign In
+                </button>
+              </form>
 
               <h1>
                 Don’t have an account?{' '}
