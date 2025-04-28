@@ -1,49 +1,49 @@
 import { useContext, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import logoImg from '../assets/logo.png';
-
+import { auth, signInWithEmailAndPassword } from '../firebase';
+import { signOut } from 'firebase/auth';
 import 'boxicons';
 import { ShopDataContext } from '../context/ShopContext';
-import { TokenContext } from '../context/TokenContext';
-import axios from 'axios';
-import { backendUrl } from '../App';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
 
+  const { user } = useContext(AuthContext);
   const { products } = useContext(ShopDataContext);
-  const { user, setToken } = useContext(TokenContext);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${backendUrl}/api/login`, {
-        username,
-        password,
-        remember,
-      });
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-      if (response.data.success && response.data.role === 'user') {
-        localStorage.removeItem('token');
-        if (remember) {
-          localStorage.setItem('token', response.data.token);
-        } else {
-          sessionStorage.setItem('token', response.data.token);
-        }
-        setToken(response.data.token);
+      const user = userCredential.user;
+
+      if (user) {
+        console.log(user);
         document.getElementById('modal_login').checked = false;
-      } else {
-        toast.error(response.data.message || 'You are not authorized');
+        navigate('/');
       }
     } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
+  };
+
+  const handleLogout = () => {
+    signOut(auth);
   };
 
   const filteredProducts = products.filter((product) =>
@@ -183,22 +183,15 @@ const Navbar = () => {
             >
               {user ? (
                 <>
-                  <Link className="btn btn-ghost">
+                  <Link to="/profile" className="btn btn-ghost">
                     <li>Profile</li>
                   </Link>
-                  <button
-                    className="btn btn-ghost"
-                    onClick={() => {
-                      localStorage.removeItem('token');
-                      setToken(null);
-                    }}
-                  >
-                    <li>Sign out</li>
+                  <button className="btn btn-ghost" onClick={handleLogout}>
+                    Sign out
                   </button>
                 </>
               ) : (
                 <>
-                  {/* ปุ่มเปิด modal สำหรับ login*/}
                   <label htmlFor="modal_login" className="btn btn-ghost">
                     Sign in
                   </label>
@@ -265,9 +258,9 @@ const Navbar = () => {
                   <input
                     type="text"
                     className="grow text-black"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </label>
                 {/* password */}
