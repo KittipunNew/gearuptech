@@ -30,7 +30,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <>
+    <div className="lg:pt-20 pt-10">
       <Swiper
         // banner slide config
         effect="fade"
@@ -127,7 +127,7 @@ const Hero = () => {
           </div>
         </SwiperSlide>
       </Swiper>
-    </>
+    </div>
   );
 };
 

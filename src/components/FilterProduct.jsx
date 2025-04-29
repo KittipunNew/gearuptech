@@ -76,7 +76,7 @@ const FilterProduct = ({ setFilterProduct }) => {
   );
 
   return (
-    <div className="flex flex-col justify-center items-center lg:justify-start lg:items-start lg:w-60 h-full bg-white rounded-lg shadow-lg">
+    <div className="flex flex-col justify-center items-center  h-full bg-white rounded-lg shadow-lg mt-10 p-5 md:mt-20 lg:mt-0 lg:w-60 lg:justify-start lg:items-start">
       {/* Mobile & Tablet */}
       <div className="w-full flex flex-col justify-center items-center m-3 gap-5 lg:hidden">
         <label className="input input-bordered flex items-center gap-2">
@@ -144,7 +144,7 @@ const FilterProduct = ({ setFilterProduct }) => {
       </div>
 
       {/* Desktop */}
-      <div className="hidden lg:flex flex-col gap-5 w-full h-auto p-5">
+      <div className="hidden lg:flex flex-col gap-5 w-full h-auto p-2">
         <div className="text-xl font-medium flex gap-2">⚙️ Sort & Filter</div>
 
         <label className="input input-bordered flex items-center gap-2">
@@ -162,7 +162,7 @@ const FilterProduct = ({ setFilterProduct }) => {
           <div>
             <h1 className="font-medium">Sort by:</h1>
             <select
-              className="select select-bordered w-52"
+              className="select select-bordered w-full"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
             >

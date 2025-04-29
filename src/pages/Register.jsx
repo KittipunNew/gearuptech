@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logoImg from '../assets/logo.png';
 import { useState } from 'react';
 import axios from 'axios';
 import { backendUrl } from '../App';
@@ -17,6 +18,11 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error('❌ Passwords do not match');
+      return;
+    }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -60,10 +66,6 @@ const Register = () => {
       <div className="py-10 px-5 shadow-lg bg-white rounded-md flex flex-col gap-10 w-full justify-center items-center lg:py-20 lg:w-1/2">
         <div className="flex flex-col justify-center items-center font-bold gap-5 lg:text-3xl">
           <h1>Sign up</h1>
-          <h2 className="text-lg font-medium">
-            Already have a member?{' '}
-            <Link className="text-lime-500">Sign In</Link>
-          </h2>
         </div>
 
         <form className="max-w-md mx-auto w-full" onSubmit={handleRegister}>
@@ -206,7 +208,7 @@ const Register = () => {
           </div>
           <button
             type="submit"
-            className="text-white bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            className="text-white btn btn-xl btn-wide bg-lime-500 hover:bg-lime-600 focus:ring-4 focus:outline-none focus:ring-lime-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center "
           >
             Submit
           </button>

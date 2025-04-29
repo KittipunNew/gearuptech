@@ -8,9 +8,12 @@ import { toast } from 'react-toastify';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // เก็บข้อมูลผู้ใช้ที่ล็อกอิน
-  const [userDetails, setUserDetails] = useState(null);
+  const [user, setUser] = useState(null); // เก็บสถานะผู้ใช้ที่ล็อกอิน
+  const [userDetails, setUserDetails] = useState(null); // เก็บรายละเอียดข้อมูลผู้ใช้
   const [loading, setLoading] = useState(true);
+
+  console.log(user);
+  console.log(userDetails);
 
   // ดึงข้อมูลผู้ใช้ที่ล็อกอินอยู่
   useEffect(() => {
@@ -44,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, userDetails }}>
       {!loading && children}
     </AuthContext.Provider>
   );

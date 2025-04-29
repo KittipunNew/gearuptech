@@ -63,7 +63,7 @@ const ProductsList = () => {
   }, [filterCondition, products]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-2 pb-20 pt-5 lg:px-5 bg-base-200">
+    <div className="flex flex-col lg:flex-row gap-2">
       <div className="px-5 md:px-10 lg:px-0">
         <FilterProduct setFilterProduct={setFilterCondition} />
       </div>

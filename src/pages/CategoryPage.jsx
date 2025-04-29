@@ -11,40 +11,11 @@ const CategoryPage = () => {
   const productCategory = products.filter((item) => item.category === category);
 
   return (
-    <>
-      <div className="flex flex-col lg:flex-row gap-2 lg:mt-5">
-        {/* Mobile & Tablet */}
-        <div className="lg:hidden my-10">
-          <Layout>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {productCategory.length > 0 ? (
-                productCategory.map((item) => (
-                  <Link to={`/productdetail/${item._id}`} key={item._id}>
-                    <ProductCard
-                      img={
-                        Array.isArray(item.images) && item.images.length > 0
-                          ? item.images[0]
-                          : item.images
-                      }
-                      name={item.name}
-                      price={item.price}
-                    />
-                  </Link>
-                ))
-              ) : (
-                <p>No products found in this category.</p>
-              )}
-            </div>
-          </Layout>
-        </div>
-
-        {/* Desktop */}
-        <div className="hidden lg:flex flex-col p-20 gap-10">
-          <h1 className="text-2xl font-bold">
-            {category.toUpperCase()}
-            <span className="text-gray-400">({productCategory.length})</span>
-          </h1>
-          <div className=" lg:grid grid-cols-3 xl:grid-cols-5 gap-3">
+    <div className="flex flex-col lg:flex-row gap-2">
+      {/* Mobile & Tablet */}
+      <div className="lg:hidden my-10">
+        <Layout>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {productCategory.length > 0 ? (
               productCategory.map((item) => (
                 <Link to={`/productdetail/${item._id}`} key={item._id}>
@@ -63,9 +34,36 @@ const CategoryPage = () => {
               <p>No products found in this category.</p>
             )}
           </div>
+        </Layout>
+      </div>
+
+      {/* Desktop */}
+      <div className="hidden lg:flex flex-col gap-10">
+        <h1 className="text-2xl font-bold">
+          {category.toUpperCase()}
+          <span className="text-gray-400">({productCategory.length})</span>
+        </h1>
+        <div className=" lg:grid grid-cols-3 xl:grid-cols-5 gap-3">
+          {productCategory.length > 0 ? (
+            productCategory.map((item) => (
+              <Link to={`/productdetail/${item._id}`} key={item._id}>
+                <ProductCard
+                  img={
+                    Array.isArray(item.images) && item.images.length > 0
+                      ? item.images[0]
+                      : item.images
+                  }
+                  name={item.name}
+                  price={item.price}
+                />
+              </Link>
+            ))
+          ) : (
+            <p>No products found in this category.</p>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -15,6 +15,9 @@ import { AuthContext } from './context/AuthContext';
 import Register from './pages/Register';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+import SidebarAccount from './components/SidebarAccount';
+import AccountOverview from './pages/AccountOverview';
+import AccountInfo from './pages/AccountInfo';
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -23,28 +26,86 @@ const App = () => {
       <ToastContainer />
       <Navbar />
       <Routes>
+        {/* หน้าแรก */}
         <Route path="/" element={<Home />} />
-        <Route path="/productlist" element={<ProductsList />} />
-        <Route path="/productlist/:category" element={<CategoryPage />} />
+
+        {/* รายการสินค้าทั้งหมด */}
         <Route
-          path="/productdetail/:id"
+          path="/productlist"
+          element={
+            <div className="bg-base-300">
+              <Layout>
+                <ProductsList />
+              </Layout>
+            </div>
+          }
+        />
+
+        {/* รายการสินค้าเฉพาะหมวดหมู่ */}
+        <Route
+          path="/productlist/:category"
           element={
             <Layout>
-              <ProductDetail />
+              <CategoryPage />
             </Layout>
           }
         />
+
+        {/* รายละเอียดสินค้า */}
+        <Route
+          path="/productdetail/:id"
+          element={
+            <div>
+              <Layout>
+                <ProductDetail />
+              </Layout>
+            </div>
+          }
+        />
+        {/* สมัครสมาชิก */}
         <Route
           path="/register"
           element={
             user ? (
               <Navigate to="/" />
             ) : (
-              <div className="bg-base-300 border-2 border-base-300">
+              <div className="bg-base-300">
                 <Layout>
                   <Register />
                 </Layout>
               </div>
+            )
+          }
+        />
+
+        <Route
+          path="/account/overview"
+          element={
+            user ? (
+              <div className="bg-base-300 border-2 border-base-300">
+                <Layout>
+                  <SidebarAccount />
+                  <AccountOverview />
+                </Layout>
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+
+        <Route
+          path="/account/account-information"
+          element={
+            user ? (
+              <div className="bg-base-300 border-2 border-base-300">
+                <Layout>
+                  <SidebarAccount />
+                  <AccountInfo />
+                </Layout>
+              </div>
+            ) : (
+              <Navigate to="/" />
             )
           }
         />

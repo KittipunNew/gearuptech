@@ -13,12 +13,10 @@ const Navbar = () => {
   const [searchInput, setSearchInput] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
-
-  const { user } = useContext(AuthContext);
-  const { products } = useContext(ShopDataContext);
-
   const navigate = useNavigate();
+
+  const { user, userDetails } = useContext(AuthContext);
+  const { products } = useContext(ShopDataContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,9 +30,17 @@ const Navbar = () => {
       const user = userCredential.user;
 
       if (user) {
-        console.log(user);
         document.getElementById('modal_login').checked = false;
         navigate('/');
+      }
+
+      if (userDetails) {
+        toast.success(
+          `👋 Welcome, ${
+            userDetails.firstName.charAt(0).toUpperCase() +
+            userDetails.firstName.slice(1)
+          }!`
+        );
       }
     } catch (error) {
       console.log(error);
@@ -51,7 +57,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="bg-black text-white flex items-center justify-between py-2 px-5 shadow-md md:py-5">
+    <nav className="bg-black text-white flex items-center justify-between py-2 px-5 shadow-md md:py-5 fixed w-full z-50">
       <div className="flex items-center gap-2">
         <div className="dropdown lg:hidden">
           <div
@@ -174,8 +180,18 @@ const Navbar = () => {
         {/* User / Cart */}
         <div className="flex gap-3">
           <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="btn btn-square">
+            <div
+              tabIndex={0}
+              role="button"
+              className={`btn btn-square ${user ? 'w-auto px-5' : ''}`}
+            >
               <box-icon name="user"></box-icon>
+              <h1 className={`${user ? 'block' : 'hidden'}`}>
+                {userDetails
+                  ? userDetails.firstName.charAt(0).toUpperCase() +
+                    userDetails.firstName.slice(1)
+                  : ''}
+              </h1>
             </div>
             <ul
               tabIndex={0}
@@ -183,21 +199,29 @@ const Navbar = () => {
             >
               {user ? (
                 <>
-                  <Link to="/profile" className="btn btn-ghost">
-                    <li>Profile</li>
-                  </Link>
-                  <button className="btn btn-ghost" onClick={handleLogout}>
-                    Sign out
-                  </button>
+                  <li>
+                    <Link to="/account/overview" className="btn btn-ghost">
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button className="btn btn-ghost" onClick={handleLogout}>
+                      Sign out
+                    </button>
+                  </li>
                 </>
               ) : (
                 <>
-                  <label htmlFor="modal_login" className="btn btn-ghost">
-                    Sign in
-                  </label>
-                  <Link to="/register" className="btn btn-ghost">
-                    <li>Sign up</li>
-                  </Link>
+                  <li>
+                    <label htmlFor="modal_login" className="btn btn-ghost">
+                      Sign in
+                    </label>
+                  </li>
+                  <li>
+                    <Link to="/register" className="btn btn-ghost">
+                      Sign up
+                    </Link>
+                  </li>
                 </>
               )}
             </ul>
@@ -242,21 +266,28 @@ const Navbar = () => {
               <h2 className="font-bold text-xl">Sign In</h2>
 
               <form
-                className="flex flex-col items-center justify-center gap-3"
+                className="flex flex-col items-center justify-center gap-5"
                 onSubmit={handleLogin}
               >
                 {/* username */}
-                <label className="input input-bordered flex items-center gap-2">
+                <label className="input input-bordered input-xl flex items-center gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="h-4 w-4 opacity-70 text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6 text-black"
                   >
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"
+                    />
                   </svg>
+
                   <input
-                    type="text"
+                    type="email"
                     className="grow text-black"
                     placeholder="Email"
                     value={email}
@@ -264,45 +295,47 @@ const Navbar = () => {
                   />
                 </label>
                 {/* password */}
-                <label className="input input-bordered flex items-center gap-2">
+                <label className="input input-bordered input-xl flex items-center gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    className="h-4 w-4 opacity-70 text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6 text-black"
                   >
                     <path
-                      fillRule="evenodd"
-                      d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                      clipRule="evenodd"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"
                     />
                   </svg>
+
                   <input
                     type="password"
+                    placeholder="Password"
                     className="grow text-black"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </label>
-                {/* Checkbox Remember me */}
-                <label className="cursor-pointer label flex items-center justify-start gap-5">
-                  <input
-                    type="checkbox"
-                    className="checkbox checkbox-success"
-                    checked={remember}
-                    onChange={() => setRemember(!remember)}
-                  />
-                  <span className="label-text">Remember me</span>
-                </label>
 
-                <button className="btn btn-wide bg-lime-500 border-none text-white">
+                <button className="btn btn-wide btn-xl bg-lime-500 border-none text-white">
                   Sign In
                 </button>
               </form>
 
               <h1>
                 Don’t have an account?{' '}
-                <Link className="text-lime-500">Sign up</Link>
+                <Link
+                  onClick={() =>
+                    (document.getElementById('modal_login').checked = false)
+                  }
+                  to="/register"
+                  className="text-lime-500"
+                >
+                  Sign up
+                </Link>
               </h1>
             </div>
           </div>
