@@ -64,31 +64,30 @@ const ProductsList = () => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-2">
-      <div className="px-5 md:px-10 lg:px-0">
+      {/* กรองข้อมูลสินค้า */}
+      <div>
         <FilterProduct setFilterProduct={setFilterCondition} />
       </div>
 
       {/* Mobile & Tablet Screen */}
       <div className="lg:hidden">
-        <Layout>
-          <div className="flex gap-2">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {filteredProducts.map((item, index) => (
-                <Link to={`/productdetail/${item._id}`} key={index}>
-                  <ProductCard
-                    img={item.images[0]}
-                    name={item.name}
-                    price={item.price.toLocaleString()}
-                  />
-                </Link>
-              ))}
-            </div>
+        <div className="flex gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {filteredProducts.map((item, index) => (
+              <Link to={`/productdetail/${item._id}`} key={index}>
+                <ProductCard
+                  img={item.images[0]}
+                  name={item.name}
+                  price={item.price.toLocaleString()}
+                />
+              </Link>
+            ))}
           </div>
-        </Layout>
+        </div>
       </div>
 
       {/* Desktop Screen */}
-      <div className="hidden lg:grid grid-cols-3 xl:grid-cols-5 gap-3">
+      <div className="hidden lg:grid grid-cols-3 xl:grid-cols-4 gap-3">
         {filteredProducts.map((item, index) => (
           <Link to={`/productdetail/${item._id}`} key={index}>
             <ProductCard

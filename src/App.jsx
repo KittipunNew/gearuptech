@@ -21,6 +21,18 @@ import AccountInfo from './pages/AccountInfo';
 
 const App = () => {
   const { user } = useContext(AuthContext);
+
+  const accountRoutes = [
+    {
+      path: '/account/overview',
+      element: <AccountOverview />,
+    },
+    {
+      path: '/account/account-information',
+      element: <AccountInfo />,
+    },
+  ];
+
   return (
     <div className="font-rajdhani">
       <ToastContainer />
@@ -45,9 +57,11 @@ const App = () => {
         <Route
           path="/productlist/:category"
           element={
-            <Layout>
-              <CategoryPage />
-            </Layout>
+            <div className="bg-base-300">
+              <Layout>
+                <CategoryPage />
+              </Layout>
+            </div>
           }
         />
 
@@ -78,37 +92,28 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/account/overview"
-          element={
-            user ? (
-              <div className="bg-base-300 border-2 border-base-300">
-                <Layout>
-                  <SidebarAccount />
-                  <AccountOverview />
-                </Layout>
-              </div>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-
-        <Route
-          path="/account/account-information"
-          element={
-            user ? (
-              <div className="bg-base-300 border-2 border-base-300">
-                <Layout>
-                  <SidebarAccount />
-                  <AccountInfo />
-                </Layout>
-              </div>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+        <>
+          {accountRoutes.map((item, index) => (
+            <Route
+              key={index}
+              path={item.path}
+              element={
+                user ? (
+                  <div className="bg-base-300 border-2 border-base-300">
+                    <Layout>
+                      <div className="flex flex-col lg:flex-row gap-2">
+                        <SidebarAccount />
+                        {item.element}
+                      </div>
+                    </Layout>
+                  </div>
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+          ))}
+        </>
       </Routes>
       <Footer />
     </div>

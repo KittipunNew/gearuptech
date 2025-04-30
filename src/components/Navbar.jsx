@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import logoImg from '../assets/logo.png';
@@ -13,10 +13,19 @@ const Navbar = () => {
   const [searchInput, setSearchInput] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const navigate = useNavigate();
+
+  const detailsRef = useRef(null);
 
   const { user, userDetails } = useContext(AuthContext);
   const { products } = useContext(ShopDataContext);
+
+  const handleLinkClick = () => {
+    if (detailsRef.current) {
+      detailsRef.current.removeAttribute('open');
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -58,20 +67,17 @@ const Navbar = () => {
 
   return (
     <nav className="bg-black text-white flex items-center justify-between py-2 px-5 shadow-md md:py-5 fixed w-full z-50">
+      {/* Mobile & Tablet menu */}
       <div className="flex items-center gap-2">
-        <div className="dropdown lg:hidden">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-square m-2 p-2 bg-white"
-          >
+        <details className="dropdown xl:hidden" ref={detailsRef}>
+          <summary className="btn btn-square m-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-7"
+              className="size-6"
             >
               <path
                 strokeLinecap="round"
@@ -79,34 +85,45 @@ const Navbar = () => {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-          </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black font-bold text-xl space-y-5"
-          >
+          </summary>
+          <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-black text-lg font-semibold space-y-3">
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" onClick={handleLinkClick}>
+                Home
+              </NavLink>
             </li>
             <li>
-              <NavLink to="/productlist">All Products</NavLink>
+              <NavLink to="/productlist" onClick={handleLinkClick}>
+                All Products
+              </NavLink>
             </li>
             <li>
-              <a>Computer</a>
+              <NavLink to="/productlist/pc" onClick={handleLinkClick}>
+                Computer
+              </NavLink>
             </li>
             <li>
-              <a>Notebook</a>
+              <NavLink to="/productlist/notebook" onClick={handleLinkClick}>
+                Notebook
+              </NavLink>
             </li>
             <li>
-              <a>Monitors</a>
+              <NavLink to="/productlist/monitor" onClick={handleLinkClick}>
+                Monitors
+              </NavLink>
             </li>
             <li>
-              <a>Accessories</a>
+              <NavLink to="/productlist/accessorie" onClick={handleLinkClick}>
+                Accessories
+              </NavLink>
             </li>
             <li>
-              <a>Network</a>
+              <NavLink to="/productlist/network" onClick={handleLinkClick}>
+                Network
+              </NavLink>
             </li>
           </ul>
-        </div>
+        </details>
 
         {/* LOGO */}
         <Link to="/">
@@ -114,15 +131,27 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* เมนูใหญ่ */}
-      <div className="hidden lg:block">
+      {/* Desktop menu */}
+      <div className="hidden xl:block">
         <ul className="flex gap-5 font-bold">
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/productlist/pc">Computer</NavLink>
-          <NavLink to="/productlist/notebook">Notebook</NavLink>
-          <NavLink to="/productlist/monitor">Monitors</NavLink>
-          <NavLink to="/productlist/accessorie">Accessories</NavLink>
-          <NavLink to="/productlist/network">Network</NavLink>
+          <li>
+            <NavLink to="/">Home</NavLink>
+          </li>
+          <li>
+            <NavLink to="/productlist/pc">Computer</NavLink>
+          </li>
+          <li>
+            <NavLink to="/productlist/notebook">Notebook</NavLink>
+          </li>
+          <li>
+            <NavLink to="/productlist/monitor">Monitors</NavLink>
+          </li>
+          <li>
+            <NavLink to="/productlist/accessorie">Accessories</NavLink>
+          </li>
+          <li>
+            <NavLink to="/productlist/network">Network</NavLink>
+          </li>
         </ul>
       </div>
 
@@ -186,7 +215,7 @@ const Navbar = () => {
               className={`btn btn-square ${user ? 'w-auto px-5' : ''}`}
             >
               <box-icon name="user"></box-icon>
-              <h1 className={`${user ? 'block' : 'hidden'}`}>
+              <h1 className={`hidden ${user ? 'md:block' : 'hidden'}`}>
                 {userDetails
                   ? userDetails.firstName.charAt(0).toUpperCase() +
                     userDetails.firstName.slice(1)
@@ -205,7 +234,10 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <button className="btn btn-ghost" onClick={handleLogout}>
+                    <button
+                      className="btn btn-error text-white"
+                      onClick={handleLogout}
+                    >
                       Sign out
                     </button>
                   </li>
@@ -245,7 +277,11 @@ const Navbar = () => {
       </div>
 
       {/* Modal login */}
-      <input type="checkbox" id="modal_login" className="modal-toggle" />
+      <input
+        type="checkbox"
+        id="modal_login"
+        className={`modal-toggle ${user ? 'hidden' : ''}`}
+      />
       <div className="modal">
         <div className="modal-box text-white bg-black pb-20 shadow-[0_0_80px_rgba(240,240,240,1.0)]">
           <div className="modal-action">

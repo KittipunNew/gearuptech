@@ -12,9 +12,6 @@ export const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null); // เก็บรายละเอียดข้อมูลผู้ใช้
   const [loading, setLoading] = useState(true);
 
-  console.log(user);
-  console.log(userDetails);
-
   // ดึงข้อมูลผู้ใช้ที่ล็อกอินอยู่
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {

@@ -41,48 +41,49 @@ const SidebarAccount = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg lg:h-screen lg:w-80 lg:p-10 mt-10">
-      <h1 className="text-2xl font-bold mb-5 hidden lg:block">
-        Manage My Account
-      </h1>
-
+    <>
       {/* Mobile & Tablet */}
-      <details
-        ref={detailsRef}
-        className="w-full bg-base-200 lg:hidden rounded-t-lg"
-      >
-        <summary className="m-5 text-center flex justify-center items-center cursor-pointer text-xl">
-          <h1 className="mr-2">Account Information</h1>
-          <box-icon name="chevron-down" size="md"></box-icon>
-        </summary>
-        <ul className="p-2 w-full text-xl">
+      <div className="bg-white rounded-lg lg:hidden md:mt-5">
+        <details
+          ref={detailsRef}
+          className="w-full bg-base-200 lg:hidden rounded-t-lg flex flex-col justify-center items-center"
+        >
+          <summary className="m-5 text-center flex justify-center items-center cursor-pointer text-xl">
+            <h1 className="mr-2">Account Information</h1>
+            <box-icon name="chevron-down" size="md"></box-icon>
+          </summary>
+          <ul className="p-2 w-full text-xl">
+            {sidebarLinks.map((item, index) => (
+              <li key={index}>
+                <Link
+                  to={item.path}
+                  className="flex items-center gap-5 text-xl py-5"
+                  onClick={handleLinkClick}
+                >
+                  {item.icon}
+                  <p>{item.label}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
+
+      {/* Desktop */}
+      <div className="hidden lg:flex flex-col bg-white rounded-lg p-10 w-80">
+        <h1 className="text-2xl font-bold mb-5 ">Manage My Account</h1>
+        <ul className="hidden lg:flex flex-col gap-10">
           {sidebarLinks.map((item, index) => (
             <li key={index}>
-              <Link
-                to={item.path}
-                className="flex items-center gap-5 text-xl py-5"
-                onClick={handleLinkClick}
-              >
+              <Link to={item.path} className="flex items-center gap-2 text-xl">
                 {item.icon}
                 <p>{item.label}</p>
               </Link>
             </li>
           ))}
         </ul>
-      </details>
-
-      {/* Desktop */}
-      <ul className="hidden lg:flex flex-col gap-10">
-        {sidebarLinks.map((item, index) => (
-          <li key={index}>
-            <Link to={item.path} className="flex items-center gap-2 text-xl">
-              {item.icon}
-              <p>{item.label}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+      </div>
+    </>
   );
 };
 

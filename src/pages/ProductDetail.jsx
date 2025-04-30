@@ -39,7 +39,7 @@ const ProductDetail = () => {
   return (
     <>
       <div className="flex flex-col gap-10 lg:gap-20 pb-20">
-        <div className="flex flex-col lg:flex-row lg:justify-center lg:items-center gap-3">
+        <div className="flex flex-col xl:flex-row xl:justify-center xl:items-center gap-3">
           {/* image product slide */}
           <div>
             <Swiper
@@ -71,7 +71,7 @@ const ProductDetail = () => {
           </div>
 
           {/* detail product */}
-          <div className="flex flex-col gap-5 lg:gap-10 lg:w-[600px] lg:mx-20">
+          <div className="flex flex-col gap-5 lg:gap-10 lg:w-[600px] xl:mx-10">
             <div className="flex flex-col gap-3">
               <h1 className="text-2xl text-lime-500 font-bold lg:hidden">
                 <span className="text-lg">฿</span>
@@ -124,7 +124,7 @@ const ProductDetail = () => {
           <h1 className="text-2xl font-bold">Related Products</h1>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
             {relatedProducts.slice(0, 4).map((item) => (
-              <Link to={`/productdetail/${item._id}`}>
+              <Link to={`/productdetail/${item._id}`} key={item._id}>
                 <ProductCard
                   img={item.images[0]}
                   name={item.name}

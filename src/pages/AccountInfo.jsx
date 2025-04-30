@@ -15,7 +15,7 @@ const AccountInfo = () => {
   if (!user || !userDetails) return null;
 
   return (
-    <div className="bg-white p-5 flex flex-col gap-5">
+    <div className="bg-white p-5 flex flex-col gap-5 w-full">
       <div className="flex items-center gap-2 font-bold text-xl">
         <i className="bx bx-user"></i>
         <p>My Profile</p>
