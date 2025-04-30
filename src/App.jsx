@@ -18,6 +18,9 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import SidebarAccount from './components/SidebarAccount';
 import AccountOverview from './pages/AccountOverview';
 import AccountInfo from './pages/AccountInfo';
+import Wishlist from './pages/Wishlist';
+import Order from './pages/Order';
+import ShippingAddress from './pages/ShippingAddress';
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -30,6 +33,18 @@ const App = () => {
     {
       path: '/account/account-information',
       element: <AccountInfo />,
+    },
+    {
+      path: '/account/wishlist',
+      element: <Wishlist />,
+    },
+    {
+      path: '/account/order',
+      element: <Order />,
+    },
+    {
+      path: '/account/shipping-address',
+      element: <ShippingAddress />,
     },
   ];
 

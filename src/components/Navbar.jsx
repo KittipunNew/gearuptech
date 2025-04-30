@@ -44,12 +44,7 @@ const Navbar = () => {
       }
 
       if (userDetails) {
-        toast.success(
-          `👋 Welcome, ${
-            userDetails.firstName.charAt(0).toUpperCase() +
-            userDetails.firstName.slice(1)
-          }!`
-        );
+        toast.success(`👋 Welcome, ${userDetails}!`);
       }
     } catch (error) {
       console.log(error);
@@ -216,10 +211,7 @@ const Navbar = () => {
             >
               <box-icon name="user"></box-icon>
               <h1 className={`hidden ${user ? 'md:block' : 'hidden'}`}>
-                {userDetails
-                  ? userDetails.firstName.charAt(0).toUpperCase() +
-                    userDetails.firstName.slice(1)
-                  : ''}
+                {userDetails ? userDetails.firstName : ''}
               </h1>
             </div>
             <ul

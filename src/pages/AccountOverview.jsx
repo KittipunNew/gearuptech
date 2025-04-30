@@ -17,7 +17,12 @@ const AccountOverview = () => {
         <h1>Name : {userDetails.firstName + ' ' + userDetails.lastName}</h1>
         <h1>Email : {userDetails.email || ''}</h1>
         <h1>Phone no : {userDetails.phoneNumber}</h1>
-        <h1>Date of Birth : {userDetails.dateOfBirth || ''}</h1>
+        <h1>
+          Date of Birth :
+          {userDetails.dateOfBirth
+            ? new Date(userDetails.dateOfBirth).toLocaleDateString('en-GB')
+            : ''}
+        </h1>
       </div>
     </div>
   );
