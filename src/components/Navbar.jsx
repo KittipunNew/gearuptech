@@ -226,6 +226,16 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link to="/account/wishlist" className="btn btn-ghost">
+                      Wishlist
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/account/order" className="btn btn-ghost">
+                      order
+                    </Link>
+                  </li>
+                  <li>
                     <button
                       className="btn btn-error text-white"
                       onClick={handleLogout}
