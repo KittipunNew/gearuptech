@@ -231,7 +231,7 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/account/order" className="btn btn-ghost">
+                    <Link to="/account/orders" className="btn btn-ghost">
                       order
                     </Link>
                   </li>

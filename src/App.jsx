@@ -14,13 +14,14 @@ import CategoryPage from './pages/CategoryPage';
 import { AuthContext } from './context/AuthContext';
 import Register from './pages/Register';
 
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import SidebarAccount from './components/SidebarAccount';
 import AccountOverview from './pages/AccountOverview';
 import AccountInfo from './pages/AccountInfo';
 import Wishlist from './pages/Wishlist';
-import Order from './pages/Order';
 import ShippingAddress from './pages/ShippingAddress';
+import OrderRoutes from './components/OrderRoutes/OrderRoutes';
+
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -39,8 +40,8 @@ const App = () => {
       element: <Wishlist />,
     },
     {
-      path: '/account/order',
-      element: <Order />,
+      path: '/account/orders/*',
+      element: <OrderRoutes />,
     },
     {
       path: '/account/shipping-address',
@@ -130,6 +131,7 @@ const App = () => {
           ))}
         </>
       </Routes>
+
       <Footer />
     </div>
   );

@@ -5,14 +5,14 @@ import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
 
 const AccountInfo = () => {
-  const { user, userDetails } = useContext(AuthContext);
+  const { user, userDetails, getToken } = useContext(AuthContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
 
-  // ดึงข้อมูลผู้ใช้
+  // เซ็ตค่าข้อมูลผู้ใช้
   useEffect(() => {
     if (userDetails) {
       setFirstName(userDetails.firstName || '');
@@ -35,16 +35,25 @@ const AccountInfo = () => {
     e.preventDefault();
 
     try {
-      await axios.put(`${backendUrl}/api/update-info/${user.uid}`, {
-        firstName: firstName
-          ? firstName.charAt(0).toUpperCase() + firstName.slice(1)
-          : '',
-        lastName: lastName
-          ? lastName.charAt(0).toUpperCase() + lastName.slice(1)
-          : '',
-        phoneNumber,
-        dateOfBirth,
-      });
+      const token = await getToken();
+      await axios.put(
+        `${backendUrl}/api/update-info/${user.uid}`,
+        {
+          firstName: firstName
+            ? firstName.charAt(0).toUpperCase() + firstName.slice(1)
+            : '',
+          lastName: lastName
+            ? lastName.charAt(0).toUpperCase() + lastName.slice(1)
+            : '',
+          phoneNumber,
+          dateOfBirth,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success('✅ Data update successful');
     } catch (err) {

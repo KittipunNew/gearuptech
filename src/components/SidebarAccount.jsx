@@ -23,7 +23,7 @@ const SidebarAccount = () => {
     },
     {
       label: 'MY ORDER',
-      path: '/account/order',
+      path: '/account/orders',
       icon: <i className="bx bxs-truck"></i>,
     },
     {
