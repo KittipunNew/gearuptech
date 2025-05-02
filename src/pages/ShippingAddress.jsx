@@ -57,7 +57,7 @@ const ShippingAddress = () => {
       </div>
 
       <button
-        className="btn lg:btn-lg"
+        className={`btn lg:btn-lg`}
         onClick={() =>
           document.getElementById('modal_create_address').showModal()
         }

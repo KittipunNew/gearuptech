@@ -37,7 +37,7 @@ const AccountInfo = () => {
     try {
       const token = await getToken();
       await axios.put(
-        `${backendUrl}/api/update-info/${user.uid}`,
+        `${backendUrl}/api/update-info`,
         {
           firstName: firstName
             ? firstName.charAt(0).toUpperCase() + firstName.slice(1)
