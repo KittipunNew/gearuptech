@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useEffect, useState, useCallback, use } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
 import { backendUrl } from '../App';
@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [userDetails, setUserDetails] = useState(null); // เก็บรายละเอียดข้อมูลผู้ใช้
   const [loading, setLoading] = useState(true);
 
+  // รับค่า token
   const getToken = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -36,19 +37,17 @@ export const AuthProvider = ({ children }) => {
     return () => unsub();
   }, []);
 
+  // ดึงข้อมูลผู้ใช้งานจากฐานข้อมูล
   useEffect(() => {
     if (user) {
       const fetchUserData = async () => {
         try {
           const token = await getToken();
-          const response = await axios.get(
-            `${backendUrl}/api/users/${user.uid}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axios.get(`${backendUrl}/api/users`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           if (response.data) {
             setUserDetails(response.data);
           } else {
@@ -63,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       fetchUserData();
     }
   }, [user]);
+
   return (
     <AuthContext.Provider value={{ user, userDetails, getToken }}>
       {!loading && children}
