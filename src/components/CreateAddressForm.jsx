@@ -7,7 +7,8 @@ import InputField from './InputField';
 import SelectField from './SelectField';
 
 const CreateAddressForm = () => {
-  const { user, userDetails, getToken } = useContext(AuthContext);
+  const { user, userDetails, getToken, fetchUserData } =
+    useContext(AuthContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -44,6 +45,7 @@ const CreateAddressForm = () => {
 
       toast.success('✅ Added address already');
       modalRef.current.close();
+      fetchUserData();
     } catch (err) {
       console.log(err);
     }

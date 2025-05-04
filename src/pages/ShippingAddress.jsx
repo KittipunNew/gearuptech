@@ -25,6 +25,7 @@ const ShippingAddress = () => {
     setEditAddress((prev) => ({ ...prev, [field]: value }));
   };
 
+  // แก้ไขข้อมูลที่อยู่
   const onSubmitEdit = async (e, id) => {
     e.preventDefault();
     try {
@@ -53,6 +54,23 @@ const ShippingAddress = () => {
     }
   };
 
+  const handleDeleteAddress = async (id) => {
+    try {
+      const token = await getToken();
+      await axios.delete(`${backendUrl}/api/delete-address/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const modalCheckbox = document.getElementById(`modal_edit_address_${id}`);
+      if (modalCheckbox) modalCheckbox.checked = false;
+      fetchUserData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="bg-white p-5 flex flex-col gap-5 w-full lg:p-10 rounded-b-lg">
       <div className="flex items-center justify-between gap-2 font-bold text-xl lg:text-2xl">
@@ -70,7 +88,9 @@ const ShippingAddress = () => {
           key={item._id}
         >
           <div className="flex justify-between items-center">
-            <h1 className="font-bold">{item.addressType.toUpperCase()}</h1>
+            <h1 className="font-bold bg-lime-500 px-5 rounded-full text-white">
+              {item.addressType.toUpperCase()}
+            </h1>
 
             {/* Dropdown แก้ไขและลบที่อยู่*/}
             <div className="dropdown dropdown-hover dropdown-end">
@@ -104,7 +124,10 @@ const ShippingAddress = () => {
                   </label>
                 </li>
                 <li>
-                  <button className="lg:text-lg text-white font-bold btn btn-error">
+                  <button
+                    className="lg:text-lg text-white font-bold btn btn-error"
+                    onClick={() => handleDeleteAddress(item._id)}
+                  >
                     Delete
                   </button>
                 </li>

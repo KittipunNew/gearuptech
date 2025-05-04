@@ -5,7 +5,8 @@ import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
 
 const AccountInfo = () => {
-  const { user, userDetails, getToken } = useContext(AuthContext);
+  const { user, userDetails, getToken, fetchUserData } =
+    useContext(AuthContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -56,6 +57,7 @@ const AccountInfo = () => {
       );
 
       toast.success('✅ Data update successful');
+      fetchUserData();
     } catch (err) {
       console.log(err);
     }
