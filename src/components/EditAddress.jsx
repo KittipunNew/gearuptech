@@ -1,7 +1,13 @@
 import InputField from './InputField';
 import SelectField from './SelectField';
 
-const EditAddress = ({ item, editAddress, handleEditChange }) => {
+const EditAddress = ({
+  item,
+  editAddress,
+  handleEditChange,
+  setEditAddress,
+  onSubmitEdit,
+}) => {
   return (
     <>
       <input
@@ -21,7 +27,10 @@ const EditAddress = ({ item, editAddress, handleEditChange }) => {
           </div>
           <div>
             <h3 className="font-bold text-lg">Edit address</h3>
-            <form className="flex flex-col gap-2 lg:text-xl mt-5">
+            <form
+              className="flex flex-col gap-2 lg:text-xl mt-5"
+              onSubmit={(e) => onSubmitEdit(e, item._id)}
+            >
               <h1 className="mb-3">Contact information</h1>
               <InputField
                 id={`receiver_first_name_${item._id}`}

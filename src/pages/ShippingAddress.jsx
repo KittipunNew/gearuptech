@@ -2,9 +2,13 @@ import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import CreateAddressForm from './../components/CreateAddressForm';
 import EditAddress from '../components/EditAddress';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { backendUrl } from '../App';
 
 const ShippingAddress = () => {
-  const { user, userDetails } = useContext(AuthContext);
+  const { user, userDetails, getToken, fetchUserData } =
+    useContext(AuthContext);
   const [editAddress, setEditAddress] = useState({
     firstName: '',
     lastName: '',
@@ -19,6 +23,34 @@ const ShippingAddress = () => {
   // รับค่ามาอัพเดทใน state editAddress
   const handleEditChange = (field, value) => {
     setEditAddress((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const onSubmitEdit = async (e, id) => {
+    e.preventDefault();
+    try {
+      const token = await getToken();
+      await axios.put(`${backendUrl}/api/update-address/${id}`, editAddress, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success('✅ The address was successfully updated.');
+      // ปิด modal
+      const modalCheckbox = document.getElementById(`modal_edit_address_${id}`);
+      if (modalCheckbox) modalCheckbox.checked = false;
+
+      fetchUserData();
+    } catch (err) {
+      console.error(err);
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.message ||
+          'An error occurred while updating the address.';
+        toast.error(`❌ ${errorMessage}`);
+      } else {
+        toast.error('❌ Failed to connect to the server.');
+      }
+    }
   };
 
   return (
@@ -93,6 +125,7 @@ const ShippingAddress = () => {
             item={item}
             editAddress={editAddress}
             handleEditChange={handleEditChange}
+            onSubmitEdit={onSubmitEdit}
           />
         </div>
       ))}

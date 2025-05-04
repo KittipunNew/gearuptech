@@ -38,33 +38,37 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // ดึงข้อมูลผู้ใช้งานจากฐานข้อมูล
+
+  const fetchUserData = async () => {
+    try {
+      const token = await getToken();
+      const response = await axios.get(`${backendUrl}/api/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.data) {
+        setUserDetails(response.data);
+      } else {
+        console.log('No user data found');
+        toast.error('No user data found');
+      }
+    } catch (error) {
+      console.error('Error fetching user data', error);
+      toast.error('Error fetching user data');
+    }
+  };
+
   useEffect(() => {
     if (user) {
-      const fetchUserData = async () => {
-        try {
-          const token = await getToken();
-          const response = await axios.get(`${backendUrl}/api/users`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.data) {
-            setUserDetails(response.data);
-          } else {
-            console.log('No user data found');
-            toast.error('No user data found');
-          }
-        } catch (error) {
-          console.error('Error fetching user data', error);
-          toast.error('Error fetching user data');
-        }
-      };
       fetchUserData();
     }
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, userDetails, getToken }}>
+    <AuthContext.Provider
+      value={{ user, userDetails, getToken, fetchUserData }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
