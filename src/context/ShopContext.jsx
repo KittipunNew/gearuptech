@@ -194,6 +194,26 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
+  const removeFromCart = async (productId) => {
+    try {
+      const token = await getToken();
+      await axios.delete(`${backendUrl}/api/delete-cart`, {
+        data: {
+          userId: userDetails._id,
+          productId: productId,
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      fetchCartList();
+    } catch (error) {
+      console.error(
+        'Error removing item:',
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <ShopDataContext.Provider
       value={{
@@ -214,6 +234,7 @@ export const ShopDataProvider = ({ children }) => {
         setCartCount,
         bestSeller,
         total,
+        removeFromCart,
       }}
     >
       {children}

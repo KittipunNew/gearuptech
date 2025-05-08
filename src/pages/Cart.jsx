@@ -4,7 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 
 const Cart = () => {
   const { userDetails } = useContext(AuthContext);
-  const { cartList, updateItemQuantity, total } = useContext(ShopDataContext);
+  const { cartList, updateItemQuantity, total, removeFromCart } =
+    useContext(ShopDataContext);
 
   if (!userDetails && !cartList) return;
 
@@ -70,7 +71,7 @@ const Cart = () => {
                         +
                       </button>
                     </div>
-                    <button>
+                    <button onClick={() => removeFromCart(product._id)}>
                       <i className="bx bxs-trash text-error md:btn-xl"></i>
                     </button>
                   </div>

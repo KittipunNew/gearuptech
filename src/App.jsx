@@ -21,10 +21,13 @@ import Wishlist from './pages/Wishlist';
 import ShippingAddress from './pages/ShippingAddress';
 import OrderRoutes from './components/OrderRoutes/OrderRoutes';
 import Cart from './pages/Cart';
-
+import { ShopDataContext } from './context/ShopContext';
+import CartEmptyPage from './pages/CartEmptyPage';
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const App = () => {
   const { user } = useContext(AuthContext);
+  const { cartList } = useContext(ShopDataContext);
 
   const accountRoutes = [
     {
@@ -114,7 +117,7 @@ const App = () => {
             user ? (
               <div className="bg-base-300">
                 <Layout>
-                  <Cart />
+                  {!cartList?.items.length ? <CartEmptyPage /> : <Cart />}
                 </Layout>
               </div>
             ) : (
