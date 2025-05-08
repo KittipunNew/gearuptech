@@ -9,24 +9,19 @@ export const ShopDataContext = createContext();
 export const ShopDataProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [productCount, setProductCount] = useState(1);
-  const [wishlist, setWishlist] = useState([]);
-  const [cartList, setCartList] = useState([]);
+  const [wishlist, setWishlist] = useState(null);
+  const [cartList, setCartList] = useState(null);
   const [cartCount, setCartCount] = useState(0);
 
   const { getToken, userDetails } = useContext(AuthContext);
 
-  const userCart = useMemo(() => {
-    return cartList.find((item) => item.userId === userDetails?._id);
-  }, [cartList, userDetails?._id]);
-
-  // const total = useMemo(() => {
-  //   const qty =
-  //   // return (
-  //   //   userCart?.items?.reduce((sum, item) => sum + item.productId.price, 0) || 0
-  //   // );
-  // });
-
-  console.log(userCart);
+  const total = useMemo(() => {
+    return cartList?.items?.reduce((total, item) => {
+      const price = item.productId?.price || 0;
+      const quantity = item.quantity || 0;
+      return total + price * quantity;
+    }, 0);
+  }, [cartList]);
 
   const bestSeller = useMemo(() => {
     return products.filter((item) => item.bestseller === true);
@@ -90,7 +85,7 @@ export const ShopDataProvider = ({ children }) => {
 
   useEffect(() => {
     const totalQuantity =
-      userCart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+      cartList?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
     setCartCount(totalQuantity);
   }, [cartList]);
 
@@ -217,8 +212,8 @@ export const ShopDataProvider = ({ children }) => {
         fetchCartList,
         cartCount,
         setCartCount,
-        userCart,
         bestSeller,
+        total,
       }}
     >
       {children}

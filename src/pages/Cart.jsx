@@ -4,21 +4,24 @@ import { AuthContext } from '../context/AuthContext';
 
 const Cart = () => {
   const { userDetails } = useContext(AuthContext);
-  const { userCart, updateItemQuantity } = useContext(ShopDataContext);
+  const { cartList, updateItemQuantity, total } = useContext(ShopDataContext);
 
-  if (!userDetails) return;
+  if (!userDetails && !cartList) return;
 
   return (
     <div className="bg-white p-5">
-      <div className="text-center text-xl font-medium">
+      <div className="text-center text-xl font-medium mb-5 bg-base-200 p-5">
         <h1>
-          Total <span className="text-lg">฿</span>500
+          Total{' '}
+          <span className="text-xl">
+            {total?.toLocaleString()} <span className="text-lg">฿</span>
+          </span>
         </h1>
       </div>
       <div>
-        <h1 className="text-xl font-bold">Cart ({userCart?.items?.length})</h1>
+        <h1 className="text-xl font-bold">Cart ({cartList?.items?.length})</h1>
         <div className="flex flex-col gap-2">
-          {userCart?.items?.map((item) => {
+          {cartList?.items?.map((item) => {
             const product = item.productId;
             return (
               <div
@@ -31,7 +34,7 @@ const Cart = () => {
                 <div className="flex flex-col gap-2 w-full">
                   <h3 className="font-bold xl:text-2xl">{product.name}</h3>
                   <p className="font-bold text-lime-500 xl:text-xl">
-                    {product.price.toLocaleString()}{' '}
+                    {product.price.toLocaleString()}
                     <span className="text-xs xl:text-lg">฿</span>
                   </p>
                   <div className="flex justify-between">
@@ -77,6 +80,35 @@ const Cart = () => {
           })}
         </div>
       </div>
+      <div>
+        <div className="flex justify-between mt-10 text-xl">
+          <p>Subtotal</p>
+          <p>
+            <span>
+              {total?.toLocaleString()} <span className="text-lg">฿</span>
+            </span>
+          </p>
+        </div>
+        <div className="flex justify-between mt-10 text-xl">
+          <p>Discount</p>
+          <p>
+            <span>
+              - 0 <span className="text-lg">฿</span>
+            </span>
+          </p>
+        </div>
+        <div className="flex justify-between mt-10 text-xl font-bold">
+          <p>Total</p>
+          <p>
+            <span className="text-xl">
+              {total?.toLocaleString()} <span className="text-lg">฿</span>
+            </span>
+          </p>
+        </div>
+      </div>
+      <button className="w-full btn btn-lg mt-5 bg-lime-500 text-white">
+        Proceed to checkout
+      </button>
     </div>
   );
 };
