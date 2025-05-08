@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
   const { userDetails } = useContext(AuthContext);
@@ -107,9 +108,12 @@ const Cart = () => {
           </p>
         </div>
       </div>
-      <button className="w-full btn btn-lg mt-5 bg-lime-500 text-white">
+      <Link
+        to="/checkout"
+        className="w-full btn btn-lg mt-5 bg-lime-500 text-white"
+      >
         Proceed to checkout
-      </button>
+      </Link>
     </div>
   );
 };

@@ -15,6 +15,7 @@ const CreateAddressForm = () => {
   const [addressType, setAddressType] = useState('');
   const [addressDetails, setAdressDetails] = useState('');
   const [postCode, setPostCode] = useState('');
+  const [isDefault, setIsDefault] = useState(false);
   const modalRef = useRef(null);
 
   if (!user || !userDetails) return null;
@@ -34,6 +35,7 @@ const CreateAddressForm = () => {
             addressType,
             addressDetails,
             postCode,
+            isDefault,
           },
         },
         {
@@ -121,6 +123,20 @@ const CreateAddressForm = () => {
               setValue={setPostCode}
               id="create_postcode"
             />
+
+            <div className="flex items-center gap-2 my-5">
+              <input
+                type="checkbox"
+                id="create_default"
+                checked={isDefault}
+                onChange={(e) => setIsDefault(e.target.checked)}
+                className="p-3 rounded-full"
+              />
+              <label htmlFor="create_default" className="label cursor-pointer">
+                <span className="label-text">Set as default address</span>
+              </label>
+            </div>
+
             <button
               type="submit"
               className="flex justify-center w-full btn btn-success"

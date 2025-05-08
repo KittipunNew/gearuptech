@@ -16,6 +16,7 @@ const ShippingAddress = () => {
     addressType: '',
     addressDetails: '',
     postCode: '',
+    isDefault: false,
   });
 
   if (!user || !userDetails) return null;
@@ -36,6 +37,14 @@ const ShippingAddress = () => {
         },
       });
       toast.success('✅ The address was successfully updated.');
+      setEditAddress({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        addressType: '',
+        addressDetails: '',
+        postCode: '',
+      });
       // ปิด modal
       const modalCheckbox = document.getElementById(`modal_edit_address_${id}`);
       if (modalCheckbox) modalCheckbox.checked = false;
@@ -54,6 +63,7 @@ const ShippingAddress = () => {
     }
   };
 
+  // ลบข้อมูลที่อยู่
   const handleDeleteAddress = async (id) => {
     try {
       const token = await getToken();
@@ -88,9 +98,18 @@ const ShippingAddress = () => {
           key={item._id}
         >
           <div className="flex justify-between items-center">
-            <h1 className="font-bold bg-lime-500 px-5 rounded-full text-white">
-              {item.addressType.toUpperCase()}
-            </h1>
+            <div className="flex gap-5">
+              <h1 className="font-bold bg-lime-500 px-5 rounded-full text-white">
+                {item.addressType.toUpperCase()}
+              </h1>
+              {item.isDefault ? (
+                <h1 className="font-bold bg-amber-300 px-5 rounded-full text-white">
+                  Default
+                </h1>
+              ) : (
+                ''
+              )}
+            </div>
 
             {/* Dropdown แก้ไขและลบที่อยู่*/}
             <div className="dropdown dropdown-hover dropdown-end">

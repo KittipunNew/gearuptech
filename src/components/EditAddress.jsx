@@ -48,6 +48,7 @@ const EditAddress = ({
               />
               <InputField
                 id={`phone_number_${item._id}`}
+                type="number"
                 createOrEdit="edit"
                 label="Phone no."
                 value={editAddress.phoneNumber}
@@ -81,6 +82,25 @@ const EditAddress = ({
                 value={editAddress.postCode}
                 setValue={(val) => handleEditChange('postCode', val)}
               />
+
+              <div className="flex items-center gap-2 my-5">
+                <input
+                  type="checkbox"
+                  id={`default_address_${item._id}`}
+                  checked={editAddress.isDefault || false}
+                  onChange={(e) =>
+                    handleEditChange('isDefault', e.target.checked)
+                  }
+                  className="p-3 rounded-full"
+                />
+
+                <label
+                  htmlFor={`default_address_${item._id}`}
+                  className="label cursor-pointer"
+                >
+                  <span className="label-text">Set as default address</span>
+                </label>
+              </div>
 
               <button
                 type="submit"
