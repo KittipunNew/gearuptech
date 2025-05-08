@@ -1,36 +1,62 @@
 import { Link, useParams } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ShopDataContext } from '../context/ShopContext';
-
+import axios from 'axios';
+import { backendUrl } from '../App';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import ProductCard from './../components/ProductCard';
+import { AuthContext } from '../context/AuthContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [productCount, setProductCount] = useState(0);
+  const [isFavorited, setIsFavorited] = useState(false);
 
-  const { products } = useContext(ShopDataContext);
+  const {
+    products,
+    productCount,
+    setProductCount,
+    handleInputProductCount,
+    addToWishlist,
+    addToCart,
+  } = useContext(ShopDataContext);
+  const { getToken, userDetails } = useContext(AuthContext);
 
   const product = products.find((item) => item._id === id);
 
+  useEffect(() => {
+    if (!userDetails || !product) return;
+    const fetchWishlist = async () => {
+      try {
+        const token = await getToken();
+        const response = await axios.get(
+          `${backendUrl}/api/wishlist/${userDetails._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const alreadyExists = response.data.some(
+          (item) => item.productId === id
+        );
+
+        setIsFavorited(alreadyExists);
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+      }
+    };
+
+    fetchWishlist();
+  }, [id, userDetails?._id, product]);
+
+  // กรองสินค้าที่เกี่ยวข้อง
   const relatedProducts = products.filter(
     (item) => item.category === product.category && item._id !== product._id
   );
-
-  function handleInputProductCount(e) {
-    const value = e.target.value;
-    if (value === '') {
-      setProductCount(0); // ตั้งค่าเป็น 0 เมื่อ input ว่างเปล่า
-    } else {
-      const number = parseInt(value, 10);
-      if (!isNaN(number) && number >= 0) {
-        setProductCount(number); // อัปเดต count เฉพาะค่าที่ถูกต้อง
-      }
-    }
-  }
 
   if (!product) {
     return <div>Product not found</div>;
@@ -113,8 +139,23 @@ const ProductDetail = () => {
               </button>
             </div>
             <div className="flex gap-1 w-52 md:w-80">
-              <button className="btn w-full text-white bg-lime-500 md:btn-xl">
+              <button
+                className="btn w-full text-white bg-lime-500 md:btn-xl"
+                onClick={() => {
+                  addToCart(id, productCount);
+                }}
+              >
                 Add to Cart
+              </button>
+              <button
+                className="btn text-white bg-amber-500 md:btn-xl"
+                onClick={async () => {
+                  const success = await addToWishlist(id);
+                  if (success) setIsFavorited(true);
+                }}
+              >
+                <i className="bx bxs-heart"></i>
+                {isFavorited ? 'Already in Wishlist' : 'Add to Wishlist'}
               </button>
             </div>
           </div>

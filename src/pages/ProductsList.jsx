@@ -2,7 +2,6 @@ import FilterProduct from './../components/FilterProduct';
 import ProductCard from '../components/ProductCard';
 import { ShopDataContext } from '../context/ShopContext';
 import { useContext, useState, useEffect } from 'react';
-import Layout from '../layout/Layout';
 import { Link } from 'react-router-dom';
 
 const ProductsList = () => {
@@ -79,6 +78,7 @@ const ProductsList = () => {
                   img={item.images[0]}
                   name={item.name}
                   price={item.price.toLocaleString()}
+                  description={item.description}
                 />
               </Link>
             ))}
@@ -94,6 +94,7 @@ const ProductsList = () => {
               img={item.images[0]}
               name={item.name}
               price={item.price.toLocaleString()}
+              description={item.description}
             />
           </Link>
         ))}

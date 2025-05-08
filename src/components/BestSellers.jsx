@@ -14,9 +14,7 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 
 const BestSellers = () => {
-  const { products } = useContext(ShopDataContext);
-
-  const bestSeller = products.filter((item) => item.bestseller === true);
+  const { bestSeller } = useContext(ShopDataContext);
 
   // เก็บค่าจำนวนรายการที่ต้องการแสดง
   const [itemCount, setItemCount] = useState(0);
@@ -78,6 +76,7 @@ const BestSellers = () => {
                     img={item.images[0]}
                     name={item.name}
                     price={item.price}
+                    description={item.description}
                   />
                 </Link>
               </div>
@@ -95,6 +94,7 @@ const BestSellers = () => {
               img={item.images[0]}
               name={item.name}
               price={item.price}
+              description={item.description}
             />
           </Link>
         ))}

@@ -9,9 +9,14 @@ const ProductCard = (props) => {
         />
       </div>
       <div className="border-t-2 flex flex-col flex-grow gap-3 p-5 w-full h-[140px]">
-        <h1 className="line-clamp-2">{props.name}</h1>
-        <div className="flex-grow"></div>
-        <h1 className="text-lime-500 font-bold">฿{props.price}.00</h1>
+        <h1 className="line-clamp-2 font-bold text-lg">{props.name}</h1>
+        <div className="flex-grow line-clamp-2 text-xs">
+          {props.description}
+        </div>
+        <h1 className="text-lime-500 font-bold">
+          <span className="text-sm">฿</span>
+          {props.price.toLocaleString()}.00
+        </h1>
       </div>
     </div>
   );

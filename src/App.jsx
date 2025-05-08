@@ -20,9 +20,9 @@ import AccountInfo from './pages/AccountInfo';
 import Wishlist from './pages/Wishlist';
 import ShippingAddress from './pages/ShippingAddress';
 import OrderRoutes from './components/OrderRoutes/OrderRoutes';
+import Cart from './pages/Cart';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
 const App = () => {
   const { user } = useContext(AuthContext);
 
@@ -51,7 +51,7 @@ const App = () => {
 
   return (
     <div className="font-rajdhani">
-      <ToastContainer />
+      <ToastContainer position="bottom-right" autoClose={2000} />
       <Navbar />
       <Routes>
         {/* หน้าแรก */}
@@ -104,6 +104,21 @@ const App = () => {
                   <Register />
                 </Layout>
               </div>
+            )
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={
+            user ? (
+              <div className="bg-base-300">
+                <Layout>
+                  <Cart />
+                </Layout>
+              </div>
+            ) : (
+              <Navigate to="/" />
             )
           }
         />

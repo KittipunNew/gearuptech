@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import logoImg from '../assets/logo.png';
@@ -9,7 +9,6 @@ import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
-  const [cartCount, setCartCount] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +18,7 @@ const Navbar = () => {
   const detailsRef = useRef(null);
 
   const { user, userDetails } = useContext(AuthContext);
-  const { products } = useContext(ShopDataContext);
+  const { products, cartCount } = useContext(ShopDataContext);
 
   const handleLinkClick = () => {
     if (detailsRef.current) {
@@ -262,9 +261,9 @@ const Navbar = () => {
           </div>
 
           <div>
-            <button className="btn btn-square bg-white">
+            <Link to="/cart" className="btn btn-square bg-white">
               <box-icon name="cart-alt"></box-icon>
-            </button>
+            </Link>
           </div>
 
           {/* จำนวนในตะกร้า */}
@@ -273,7 +272,7 @@ const Navbar = () => {
               cartCount === 0 ? 'hidden' : 'flex'
             }`}
           >
-            {cartCount}
+            {cartCount >= 100 ? '99+' : cartCount}
           </span>
         </div>
       </div>
