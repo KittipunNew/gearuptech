@@ -55,7 +55,7 @@ const CreateAddressForm = () => {
   return (
     <>
       <button
-        className={`btn lg:btn-lg`}
+        className={`btn lg:btn-lg w-full`}
         onClick={() => modalRef.current.showModal()}
       >
         <i className="bx bx-plus"></i>

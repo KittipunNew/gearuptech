@@ -25,6 +25,7 @@ import { ShopDataContext } from './context/ShopContext';
 import CartEmptyPage from './pages/CartEmptyPage';
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 import CheckoutReview from './pages/CheckoutReview';
+import SuccessPage from './pages/SuccessPage';
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -134,6 +135,21 @@ const App = () => {
               <div className="bg-base-300">
                 <Layout>
                   <CheckoutReview />
+                </Layout>
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+
+        <Route
+          path="/place-order-success"
+          element={
+            user ? (
+              <div className="bg-base-300">
+                <Layout>
+                  <SuccessPage />
                 </Layout>
               </div>
             ) : (

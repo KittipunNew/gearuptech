@@ -15,6 +15,7 @@ export const ShopDataProvider = ({ children }) => {
 
   const { getToken, userDetails } = useContext(AuthContext);
 
+  // ผลรวมราคาสินค้าทั้งหมดในตะกร้า
   const total = useMemo(() => {
     return cartList?.items?.reduce((total, item) => {
       const price = item.productId?.price || 0;
@@ -23,6 +24,7 @@ export const ShopDataProvider = ({ children }) => {
     }, 0);
   }, [cartList]);
 
+  // เก็บข้อมูลสินค้าขายดี
   const bestSeller = useMemo(() => {
     return products.filter((item) => item.bestseller === true);
   }, [products]);
@@ -58,6 +60,7 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
+  // ดึงข้อมูลสินค้าในตะกร้า
   const fetchCartList = async () => {
     if (!userDetails || !userDetails._id) return;
     try {
@@ -83,13 +86,14 @@ export const ShopDataProvider = ({ children }) => {
     fetchCartList();
   }, [userDetails]);
 
+  // จำนวนสินค้าในตะกร้า
   useEffect(() => {
     const totalQuantity =
       cartList?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
     setCartCount(totalQuantity);
   }, [cartList]);
 
-  // เพิ่มจำนวนสินค้า
+  // เพิ่มจำนวนสินค้าในหน้ารายละเอียกสินค้า
   function handleInputProductCount(e) {
     const value = e.target.value;
     if (value === '') {
@@ -101,6 +105,94 @@ export const ShopDataProvider = ({ children }) => {
       }
     }
   }
+
+  // เพิ่มสินค้าลงตะกร้า
+  const addToCart = async (productId, quantity = 1) => {
+    try {
+      const token = await getToken();
+
+      const response = await axios.post(
+        `${backendUrl}/api/add-cart`,
+        {
+          userId: userDetails._id,
+          productId,
+          quantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      fetchCartList();
+      toast.success('✅ Added to cart');
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // เพิ่มหรือลดจำนวนสินค้าในตะกร้า
+  const updateItemQuantity = async (productId, newQty) => {
+    try {
+      const token = await getToken();
+      await axios.put(
+        `${backendUrl}/api/update-cart/${userDetails._id}`,
+        {
+          productId,
+          quantity: newQty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      fetchCartList();
+    } catch (err) {
+      console.error('Update error:', err);
+    }
+  };
+
+  // ลบสินค้าออกจากตะกร้า
+  const removeFromCart = async (productId) => {
+    try {
+      const token = await getToken();
+      await axios.delete(`${backendUrl}/api/delete-cart`, {
+        data: {
+          userId: userDetails._id,
+          productId: productId,
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      fetchCartList();
+    } catch (error) {
+      console.error(
+        'Error removing item:',
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const clearCart = async () => {
+    try {
+      const token = await getToken();
+      await axios.delete(`${backendUrl}/api/clear-cart`, {
+        data: { userId: userDetails._id },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setCartList({ items: [], totalPrice: 0 });
+      fetchCartList();
+    } catch (err) {
+      console.error('Error clearing cart:', err);
+      throw err;
+    }
+  };
 
   // เพิ่มสินค้าไปยัง wishlist
   const addToWishlist = async (productId) => {
@@ -129,6 +221,7 @@ export const ShopDataProvider = ({ children }) => {
     }
   };
 
+  // ลบรายการ wishlist
   const handleDeleteWishlist = async (productId) => {
     try {
       const token = await getToken();
@@ -146,74 +239,6 @@ export const ShopDataProvider = ({ children }) => {
       console.log(err);
     }
   };
-
-  const addToCart = async (productId, quantity = 1) => {
-    try {
-      const token = await getToken();
-
-      const response = await axios.post(
-        `${backendUrl}/api/add-cart`,
-        {
-          userId: userDetails._id,
-          productId,
-          quantity,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      fetchCartList();
-      toast.success('✅ Added to cart');
-      return response.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const updateItemQuantity = async (productId, newQty) => {
-    try {
-      const token = await getToken();
-      await axios.put(
-        `${backendUrl}/api/update-cart/${userDetails._id}`,
-        {
-          productId,
-          quantity: newQty,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      fetchCartList();
-    } catch (err) {
-      console.error('Update error:', err);
-    }
-  };
-
-  const removeFromCart = async (productId) => {
-    try {
-      const token = await getToken();
-      await axios.delete(`${backendUrl}/api/delete-cart`, {
-        data: {
-          userId: userDetails._id,
-          productId: productId,
-        },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      fetchCartList();
-    } catch (error) {
-      console.error(
-        'Error removing item:',
-        error.response?.data || error.message
-      );
-    }
-  };
-
   return (
     <ShopDataContext.Provider
       value={{
@@ -235,6 +260,7 @@ export const ShopDataProvider = ({ children }) => {
         bestSeller,
         total,
         removeFromCart,
+        clearCart,
       }}
     >
       {children}

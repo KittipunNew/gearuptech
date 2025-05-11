@@ -1,123 +1,159 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import CreateAddressForm from './../components/CreateAddressForm';
+import axios from 'axios';
+import { backendUrl } from '../App';
+import { toast } from 'react-toastify';
+import CartItem from './../components/CartItem';
+import CartSummary from './../components/CartSummary';
+import AddressSelection from './../components/AddressSelection';
+import PaymentMethod from '../components/PaymentMethod ';
+import AddressModal from './../components/AddressModal';
+import ConfirmationModal from '../components/ConfirmationModal ';
 
 const Cart = () => {
-  const { userDetails } = useContext(AuthContext);
-  const { cartList, updateItemQuantity, total, cartCount, removeFromCart } =
-    useContext(ShopDataContext);
+  const { userDetails, getToken, fetchUserData } = useContext(AuthContext);
+  const { cartList, total, cartCount, clearCart } = useContext(ShopDataContext);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('stripe');
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [defaultAddress, setDefaultAddress] = useState(null);
+
+  const navigate = useNavigate();
 
   if (!userDetails && !cartList) return;
 
+  useEffect(() => {
+    if (userDetails) {
+      setAddresses(userDetails.address);
+      const defaultAddr = userDetails.address.find((addr) => addr.isDefault);
+      setDefaultAddress(defaultAddr);
+      setSelectedAddress(defaultAddr); // ตั้งค่าที่อยู่ที่เลือกเป็นที่อยู่ default เริ่มต้น
+    }
+  }, [userDetails]);
+
+  // เลือกที่อยู่
+  const handleSelectAddress = (address) => {
+    setSelectedAddress(address);
+    setIsModalOpen(false);
+  };
+
+  // เปิด modal ยืนยันการสั่งซื้อ
+  const handlePayment = async () => {
+    if (!selectedAddress) {
+      toast.error('❌ Please select a shipping address');
+      return;
+    }
+
+    setShowConfirmationModal(true);
+  };
+
+  // ยืนยันการสั่งซื้อ
+  const confirmOrder = async () => {
+    setShowConfirmationModal(true);
+
+    try {
+      const token = await getToken();
+      if (paymentMethod === 'stripe') {
+        const stripe = await stripePromise;
+
+        const response = await axios.post(
+          `${backendUrl}/api/create-checkout-session`,
+          {
+            cartList,
+            address: selectedAddress,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response);
+        const sessionId = response.data.sessionId;
+        await stripe.redirectToCheckout({ sessionId });
+      } else if (paymentMethod === 'cod') {
+        const response = await axios.post(
+          `${backendUrl}/api/create-cod-order/${userDetails._id}`,
+          {
+            cartList,
+            address: selectedAddress,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        toast.success('✅ COD order placed successfully.');
+        clearCart();
+        navigate('/place-order-success');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('❌ Payment failed. Please try again.');
+    }
+  };
+
   return (
-    <div className="bg-white p-5 flex flex-col lg:flex-row">
-      <div className="w-full lg:w-[80%]">
-        <div className="text-center text-xl font-medium mb-5 bg-base-200 p-5 lg:hidden">
-          <h1>
-            Total{' '}
-            <span className="text-xl">
-              {total?.toLocaleString()} <span className="text-lg">฿</span>
-            </span>
-          </h1>
-        </div>
-        <div>
-          <h1 className="text-xl lg:text-2xl font-bold">Cart ({cartCount})</h1>
-          <div className="flex flex-col gap-2">
-            {cartList?.items?.map((item) => {
-              const product = item.productId;
-              return (
-                <div
-                  key={product._id}
-                  className="border-b-2 p-5 flex items-center gap-5 xl:gap-10"
-                >
-                  <div className="w-[20%] lg:w-[15%] xl:w-[10%]">
-                    <img src={product.images[0]} alt={product.name} />
-                  </div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <h3 className="font-bold xl:text-2xl">{product.name}</h3>
-                    <p className="font-bold text-lime-500 xl:text-xl">
-                      {product.price.toLocaleString()}
-                      <span className="text-xs xl:text-lg">฿</span>
-                    </p>
-                    <div className="flex justify-between">
-                      <div className="flex gap-3">
-                        <p className="xl:text-lg">Qty: </p>
-                        <button
-                          className="btn btn-xs md:btn-md"
-                          onClick={() => {
-                            updateItemQuantity(
-                              item.productId._id,
-                              item.quantity - 1
-                            );
-                          }}
-                          disabled={item.quantity <= 1}
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="input w-10 input-xs md:input-md md:w-20"
-                          value={item.quantity}
-                          readOnly
-                        />
-                        <button
-                          className="btn btn-xs md:btn-md"
-                          onClick={() => {
-                            updateItemQuantity(
-                              item.productId._id,
-                              item.quantity + 1
-                            );
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                      <button onClick={() => removeFromCart(product._id)}>
-                        <i className="bx bxs-trash text-error md:btn-xl"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+    <>
+      <div className="bg-white p-5 flex flex-col">
+        <div className="w-full">
+          <div className="text-center text-xl font-medium mb-5 bg-base-200 p-5 lg:hidden">
+            <h1>
+              Total{' '}
+              <span className="text-xl">
+                {total?.toLocaleString()} <span className="text-lg">฿</span>
+              </span>
+            </h1>
           </div>
+          <div>
+            <h1 className="text-xl lg:text-2xl font-bold">
+              Cart ({cartCount})
+            </h1>
+            <CartItem />
+          </div>
+        </div>
+
+        <CartSummary />
+
+        <div>
+          <AddressSelection
+            selectedAddress={selectedAddress}
+            setIsModalOpen={setIsModalOpen}
+          />
+
+          <PaymentMethod
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+            selectedAddress={selectedAddress}
+            handlePayment={handlePayment}
+          />
         </div>
       </div>
 
-      <div className="w-full lg:w-[35%] xl:w-[25%] p-5">
-        <div className="flex justify-between mt-10 text-xl lg:mt-0">
-          <p>Subtotal</p>
-          <p>
-            <span>
-              {total?.toLocaleString()} <span className="text-lg">฿</span>
-            </span>
-          </p>
-        </div>
-        <div className="flex justify-between mt-10 text-xl">
-          <p>Discount</p>
-          <p>
-            <span>
-              - 0 <span className="text-lg">฿</span>
-            </span>
-          </p>
-        </div>
-        <div className="flex justify-between mt-10 text-xl font-bold">
-          <p>Total</p>
-          <p>
-            <span className="text-xl">
-              {total?.toLocaleString()} <span className="text-lg">฿</span>
-            </span>
-          </p>
-        </div>
-        <Link
-          to="/checkout"
-          className="w-full btn btn-lg mt-20 bg-lime-500 text-white"
-        >
-          Proceed to checkout
-        </Link>
-      </div>
-    </div>
+      {/* Address Selection Modal */}
+      <AddressModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        addresses={addresses}
+        selectedAddress={selectedAddress}
+        handleSelectAddress={setSelectedAddress}
+      />
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        showConfirmationModal={showConfirmationModal}
+        setShowConfirmationModal={setShowConfirmationModal}
+        confirmOrder={confirmOrder}
+      />
+    </>
   );
 };
 export default Cart;
