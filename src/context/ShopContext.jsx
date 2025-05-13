@@ -88,6 +88,7 @@ export const ShopDataProvider = ({ children }) => {
 
   // จำนวนสินค้าในตะกร้า
   useEffect(() => {
+    if (!userDetails) setCartCount(0);
     const totalQuantity =
       cartList?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
     setCartCount(totalQuantity);

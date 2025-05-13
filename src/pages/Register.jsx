@@ -12,7 +12,6 @@ const Register = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [address, setAddress] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
 
   const handleRegister = async (e) => {
@@ -41,7 +40,6 @@ const Register = () => {
           ? lastName.charAt(0).toUpperCase() + lastName.slice(1)
           : '',
         phoneNumber,
-        address,
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       });
 
@@ -52,7 +50,6 @@ const Register = () => {
       setFirstName('');
       setLastName('');
       setPhoneNumber('');
-      setAddress('');
       setDateOfBirth('');
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
@@ -111,7 +108,6 @@ const Register = () => {
             value={phoneNumber}
             setValue={setPhoneNumber}
           />
-          <InputField label="Address" value={address} setValue={setAddress} />
           <InputField
             label="Date of Birth"
             type="date"
