@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import CreateAddressForm from './../components/CreateAddressForm';
 import axios from 'axios';
 import { backendUrl } from '../App';
 import { toast } from 'react-toastify';
@@ -12,9 +11,11 @@ import AddressSelection from './../components/AddressSelection';
 import PaymentMethod from '../components/PaymentMethod ';
 import AddressModal from './../components/AddressModal';
 import ConfirmationModal from '../components/ConfirmationModal ';
+import { loadStripe } from '@stripe/stripe-js';
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const Cart = () => {
-  const { userDetails, getToken, fetchUserData } = useContext(AuthContext);
+  const { userDetails, getToken } = useContext(AuthContext);
   const { cartList, total, cartCount, clearCart } = useContext(ShopDataContext);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,7 +75,6 @@ const Cart = () => {
             },
           }
         );
-        console.log(response);
         const sessionId = response.data.sessionId;
         await stripe.redirectToCheckout({ sessionId });
       } else if (paymentMethod === 'cod') {
