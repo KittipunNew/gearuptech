@@ -43,7 +43,7 @@ const Navbar = () => {
       }
 
       if (userDetails) {
-        toast.success(`👋 Welcome, ${userDetails}!`);
+        toast.success(`👋 Welcome, ${userDetails.firstName}!`);
       }
     } catch (error) {
       console.log(error);
@@ -51,8 +51,14 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    signOut(auth);
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('❌ Logout failed');
+    }
   };
 
   const filteredProducts = products.filter((product) =>

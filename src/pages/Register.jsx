@@ -56,6 +56,7 @@ const Register = () => {
         toast.error(
           '❌ This email is already registered. Please log in instead.'
         );
+        return;
       } else {
         toast.error(
           `❌ ${error.response?.data?.message || 'An error occurred'}`
