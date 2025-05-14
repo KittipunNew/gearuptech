@@ -17,8 +17,9 @@ const Navbar = () => {
 
   const detailsRef = useRef(null);
 
-  const { user, userDetails } = useContext(AuthContext);
-  const { products, cartCount } = useContext(ShopDataContext);
+  const { user, userDetails, setUser, setUserDetails } =
+    useContext(AuthContext);
+  const { products, cartCount, setCartList } = useContext(ShopDataContext);
 
   const handleLinkClick = () => {
     if (detailsRef.current) {
@@ -47,14 +48,18 @@ const Navbar = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      toast.error('The information is incorrect. Please try again.');
     }
   };
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      setUser(null);
+      setUserDetails(null);
+      setCartList({ items: [] });
       toast.success('Logged out successfully');
+      navigate('/');
     } catch (error) {
       console.error('Logout failed:', error);
       toast.error('❌ Logout failed');

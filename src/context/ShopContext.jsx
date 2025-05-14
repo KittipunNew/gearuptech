@@ -11,9 +11,15 @@ export const ShopDataProvider = ({ children }) => {
   const [productCount, setProductCount] = useState(1);
   const [wishlist, setWishlist] = useState(null);
   const [cartList, setCartList] = useState(null);
-  const [cartCount, setCartCount] = useState(0);
 
   const { getToken, userDetails } = useContext(AuthContext);
+
+  console.log(products);
+
+  // จำนวนสินค้าในตะกร้า
+  const cartCount = useMemo(() => {
+    return cartList?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  }, [cartList]);
 
   // ผลรวมราคาสินค้าทั้งหมดในตะกร้า
   const total = useMemo(() => {
@@ -80,19 +86,10 @@ export const ShopDataProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!userDetails) return;
     fetchList();
     fetchWishlist();
     fetchCartList();
   }, [userDetails]);
-
-  // จำนวนสินค้าในตะกร้า
-  useEffect(() => {
-    if (!userDetails) setCartCount(0);
-    const totalQuantity =
-      cartList?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-    setCartCount(totalQuantity);
-  }, [cartList]);
 
   // เพิ่มจำนวนสินค้าในหน้ารายละเอียกสินค้า
   function handleInputProductCount(e) {
@@ -257,7 +254,6 @@ export const ShopDataProvider = ({ children }) => {
         updateItemQuantity,
         fetchCartList,
         cartCount,
-        setCartCount,
         bestSeller,
         total,
         removeFromCart,
