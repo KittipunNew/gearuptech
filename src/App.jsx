@@ -23,9 +23,15 @@ import OrderRoutes from './components/OrderRoutes/OrderRoutes';
 import Cart from './pages/Cart';
 import { ShopDataContext } from './context/ShopContext';
 import CartEmptyPage from './pages/CartEmptyPage';
-export const backendUrl = import.meta.env.VITE_BACKEND_URL;
-import CheckoutReview from './pages/CheckoutReview';
+
 import SuccessPage from './pages/SuccessPage';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+export const stripePromise = loadStripe(
+  'pk_test_51RNVoK2KGxMaZqvhPkAjExjBw0OUFIopKDDxQpe3TajVDvORR9hIOExh1VYPypyUuylrCiILSylpoPzXMkuzq6FF00poLAQzEW'
+);
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -119,22 +125,13 @@ const App = () => {
             user ? (
               <div className="bg-base-300">
                 <Layout>
-                  {!cartList?.items.length ? <CartEmptyPage /> : <Cart />}
-                </Layout>
-              </div>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-
-        <Route
-          path="/checkout"
-          element={
-            user ? (
-              <div className="bg-base-300">
-                <Layout>
-                  <CheckoutReview />
+                  {!cartList?.items.length ? (
+                    <CartEmptyPage />
+                  ) : (
+                    <Elements stripe={stripePromise}>
+                      <Cart />
+                    </Elements>
+                  )}
                 </Layout>
               </div>
             ) : (

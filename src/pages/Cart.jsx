@@ -3,17 +3,15 @@ import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { backendUrl } from '../App';
+import { backendUrl, stripePromise } from '../App';
 import { toast } from 'react-toastify';
 import CartItem from './../components/CartItem';
 import CartSummary from './../components/CartSummary';
 import AddressSelection from './../components/AddressSelection';
-import PaymentMethod from '../components/PaymentMethod ';
+import PaymentMethod from '../components/PaymentMethod';
 import AddressModal from './../components/AddressModal';
-import ConfirmationModal from '../components/ConfirmationModal ';
-import { loadStripe } from '@stripe/stripe-js';
+import ConfirmationModal from '../components/ConfirmationModal';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const Cart = () => {
   const { userDetails, getToken } = useContext(AuthContext);
   const { cartList, total, cartCount, clearCart } = useContext(ShopDataContext);
@@ -27,7 +25,7 @@ const Cart = () => {
 
   const navigate = useNavigate();
 
-  if (!userDetails && !cartList) return;
+  if (!userDetails || !cartList) return;
 
   useEffect(() => {
     if (userDetails) {
@@ -60,13 +58,11 @@ const Cart = () => {
 
     try {
       const token = await getToken();
-      if (paymentMethod === 'stripe') {
-        const stripe = await stripePromise;
-
+      if (paymentMethod === 'credit_card') {
         const response = await axios.post(
-          `${backendUrl}/api/create-checkout-session`,
+          `${backendUrl}/api/create-checkout-session/${userDetails._id}`,
           {
-            cartList,
+            cartList: cartList.items,
             address: selectedAddress,
           },
           {
@@ -75,10 +71,21 @@ const Cart = () => {
             },
           }
         );
-        const sessionId = response.data.sessionId;
-        await stripe.redirectToCheckout({ sessionId });
+
+        const { sessionId } = response.data;
+
+        // Redirect ไปที่หน้า Stripe Checkout
+        const stripe = await stripePromise;
+        console.log('Session ID:', sessionId);
+        console.log(stripe);
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+
+        if (error) {
+          console.error(error);
+          toast.error('❌ Payment failed. Please try again.');
+        }
       } else if (paymentMethod === 'cod') {
-        const response = await axios.post(
+        await axios.post(
           `${backendUrl}/api/create-cod-order/${userDetails._id}`,
           {
             cartList,

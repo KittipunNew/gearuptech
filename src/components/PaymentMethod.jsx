@@ -12,11 +12,11 @@ const PaymentMethod = ({
           <input
             type="radio"
             name="paymentMethod"
-            value="stripe"
-            checked={paymentMethod === 'stripe'}
-            onChange={() => setPaymentMethod('stripe')}
+            value="credit_card"
+            checked={paymentMethod === 'credit_card'}
+            onChange={() => setPaymentMethod('credit_card')}
           />
-          <label className="mr-4"> Pay with Stripe</label>
+          <label className="mr-4"> Pay with Credit Card</label>
         </div>
 
         <div className="flex gap-3 items-center">
@@ -36,8 +36,8 @@ const PaymentMethod = ({
         className="mt-5 w-full bg-black text-white py-3 rounded hover:bg-gray-800 transition "
         disabled={!selectedAddress}
       >
-        {paymentMethod === 'stripe'
-          ? 'Pay with Stripe'
+        {paymentMethod === 'credit_card'
+          ? 'Pay with Credit Card'
           : 'Place Order with COD'}
       </button>
     </>
