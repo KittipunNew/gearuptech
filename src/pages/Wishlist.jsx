@@ -2,11 +2,15 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { ShopDataContext } from '../context/ShopContext';
 import { Link } from 'react-router-dom';
+import { WishlistContext } from '../context/WishlistContext';
+import { CartContext } from '../context/CartContext';
 
 const Wishlist = () => {
   const { user, userDetails } = useContext(AuthContext);
-  const { wishlist, products, fetchWishlist, handleDeleteWishlist, addToCart } =
-    useContext(ShopDataContext);
+  const { wishlist, fetchWishlist, handleDeleteWishlist } =
+    useContext(WishlistContext);
+  const { addToCart } = useContext(CartContext);
+  const { products } = useContext(ShopDataContext);
 
   useEffect(() => {
     fetchWishlist();

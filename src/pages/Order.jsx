@@ -23,40 +23,35 @@ const Order = () => {
         <nav className="overflow-x-auto w-full pb-5 scrollbar-thumb-lime-500 scrollbar-track-white scrollbar-thin">
           <ul className="flex gap-10 justify-center items-center lg:text-xl whitespace-nowrap min-w-[500px] md:justify-around">
             <li>
-              <Link to="/account/orders" className={linkClass('')}>
-                All my order
+              <Link
+                to="/account/orders/pending"
+                className={linkClass('/pending')}
+              >
+                Pending
               </Link>
             </li>
             <li>
               <Link
-                to="/account/orders/to-pay"
-                className={linkClass('/to-pay')}
+                to="/account/orders/processing"
+                className={linkClass('/processing')}
               >
-                To Pay
+                Processing
               </Link>
             </li>
             <li>
               <Link
-                to="/account/orders/to-receive"
-                className={linkClass('/to-receive')}
+                to="/account/orders/shipped"
+                className={linkClass('/shipped')}
               >
-                To Receive
+                Shipped
               </Link>
             </li>
             <li>
               <Link
-                to="/account/orders/completed"
-                className={linkClass('/completed')}
+                to="/account/orders/delivered"
+                className={linkClass('/delivered')}
               >
-                Completed
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/account/orders/canceled"
-                className={linkClass('/canceled')}
-              >
-                Canceled
+                Delivered
               </Link>
             </li>
           </ul>

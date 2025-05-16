@@ -9,19 +9,17 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import ProductCard from './../components/ProductCard';
 import { AuthContext } from '../context/AuthContext';
+import { WishlistContext } from '../context/WishlistContext';
+import { CartContext } from '../context/CartContext';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [isFavorited, setIsFavorited] = useState(false);
 
-  const {
-    products,
-    productCount,
-    setProductCount,
-    handleInputProductCount,
-    addToWishlist,
-    addToCart,
-  } = useContext(ShopDataContext);
+  const { products, productCount, setProductCount, handleInputProductCount } =
+    useContext(ShopDataContext);
+  const { addToCart } = useContext(CartContext);
+  const { addToWishlist } = useContext(WishlistContext);
   const { getToken, userDetails } = useContext(AuthContext);
 
   const product = products.find((item) => item._id === id);

@@ -11,17 +11,18 @@ import AddressSelection from './../components/AddressSelection';
 import PaymentMethod from '../components/PaymentMethod';
 import AddressModal from './../components/AddressModal';
 import ConfirmationModal from '../components/ConfirmationModal';
+import { CartContext } from '../context/CartContext';
 
 const Cart = () => {
-  const { userDetails, getToken } = useContext(AuthContext);
-  const { cartList, total, cartCount, clearCart } = useContext(ShopDataContext);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('stripe');
+  const [paymentMethod, setPaymentMethod] = useState('credit card');
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [defaultAddress, setDefaultAddress] = useState(null);
+
+  const { userDetails, getToken } = useContext(AuthContext);
+  const { cartList, total, cartCount, clearCart } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -58,6 +59,7 @@ const Cart = () => {
 
     try {
       const token = await getToken();
+      // ชำระเงินผ่าน credit card
       if (paymentMethod === 'credit_card') {
         const response = await axios.post(
           `${backendUrl}/api/create-checkout-session/${userDetails._id}`,
@@ -76,14 +78,15 @@ const Cart = () => {
 
         // Redirect ไปที่หน้า Stripe Checkout
         const stripe = await stripePromise;
-        console.log('Session ID:', sessionId);
-        console.log(stripe);
+        clearCart();
         const { error } = await stripe.redirectToCheckout({ sessionId });
 
         if (error) {
           console.error(error);
           toast.error('❌ Payment failed. Please try again.');
         }
+
+        // ชำระเงินปลายทาง
       } else if (paymentMethod === 'cod') {
         await axios.post(
           `${backendUrl}/api/create-cod-order/${userDetails._id}`,
