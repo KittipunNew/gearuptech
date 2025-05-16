@@ -7,6 +7,7 @@ import { signOut } from 'firebase/auth';
 import 'boxicons';
 import { ShopDataContext } from '../context/ShopContext';
 import { AuthContext } from '../context/AuthContext';
+import { CartContext } from '../context/CartContext';
 
 const Navbar = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -19,7 +20,8 @@ const Navbar = () => {
 
   const { user, userDetails, setUser, setUserDetails } =
     useContext(AuthContext);
-  const { products, cartCount, setCartList } = useContext(ShopDataContext);
+  const { products } = useContext(ShopDataContext);
+  const { cartCount, setCartList } = useContext(CartContext);
 
   const handleLinkClick = () => {
     if (detailsRef.current) {

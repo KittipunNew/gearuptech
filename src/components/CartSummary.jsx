@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { ShopDataContext } from '../context/ShopContext';
+import { CartContext } from '../context/CartContext';
 
 const CartSummary = () => {
-  const { total } = useContext(ShopDataContext);
+  const { total } = useContext(CartContext);
   return (
     <div className="w-full p-5 border-b">
       <div className="flex justify-between text-xl">

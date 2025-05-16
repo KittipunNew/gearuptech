@@ -1,9 +1,9 @@
 import { useContext } from 'react';
-import { ShopDataContext } from '../context/ShopContext';
+import { CartContext } from '../context/CartContext';
 
 const CartItem = () => {
   const { cartList, updateItemQuantity, removeFromCart } =
-    useContext(ShopDataContext);
+    useContext(CartContext);
   return (
     <div className="flex flex-col gap-2">
       {cartList?.items?.map((item) => {

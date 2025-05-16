@@ -21,12 +21,13 @@ import Wishlist from './pages/Wishlist';
 import ShippingAddress from './pages/ShippingAddress';
 import OrderRoutes from './components/OrderRoutes/OrderRoutes';
 import Cart from './pages/Cart';
-import { ShopDataContext } from './context/ShopContext';
 import CartEmptyPage from './pages/CartEmptyPage';
 
-import SuccessPage from './pages/SuccessPage';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import PaymentSuccess from './pages/PaymentSuccess';
+import { CartContext } from './context/CartContext';
+import CODSuccessPage from './pages/CODSuccessPage';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const stripePromise = loadStripe(
@@ -35,7 +36,7 @@ export const stripePromise = loadStripe(
 
 const App = () => {
   const { user } = useContext(AuthContext);
-  const { cartList } = useContext(ShopDataContext);
+  const { cartList } = useContext(CartContext);
 
   const accountRoutes = [
     {
@@ -146,7 +147,22 @@ const App = () => {
             user ? (
               <div className="bg-base-300">
                 <Layout>
-                  <SuccessPage />
+                  <CODSuccessPage />
+                </Layout>
+              </div>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+
+        <Route
+          path="/payment-success"
+          element={
+            user ? (
+              <div className="bg-base-300">
+                <Layout>
+                  <PaymentSuccess />
                 </Layout>
               </div>
             ) : (
