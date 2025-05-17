@@ -36,10 +36,15 @@ export const OrderProvider = ({ children }) => {
 
   const pending = useMemo(() => {
     return orderList?.filter((item) => item.orderStatus === 'pending');
-  });
+  }, [orderList]);
+
+  const pendingCount = useMemo(() => {
+    if (!pending) return;
+    return pending.length.toString();
+  }, [pending]);
 
   return (
-    <OrderContext.Provider value={{ fetchOrder, pending }}>
+    <OrderContext.Provider value={{ fetchOrder, pending, pendingCount }}>
       {children}
     </OrderContext.Provider>
   );
