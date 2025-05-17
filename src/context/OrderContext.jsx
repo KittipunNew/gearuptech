@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { backendUrl } from '../App';
 import { AuthContext } from './AuthContext';
 import { toast } from 'react-toastify';
@@ -34,8 +34,12 @@ export const OrderProvider = ({ children }) => {
     fetchOrder();
   }, [userDetails]);
 
+  const pending = useMemo(() => {
+    return orderList?.filter((item) => item.orderStatus === 'pending');
+  });
+
   return (
-    <OrderContext.Provider value={{ fetchOrder, orderList }}>
+    <OrderContext.Provider value={{ fetchOrder, pending }}>
       {children}
     </OrderContext.Provider>
   );
