@@ -13,13 +13,12 @@ Frontend สำหรับเว็บไซต์ GearUp Tech (E-commerce ข�
 
 ## 🖥️ Tech Stack
 - React.js
-- TailwindCSS
+- TailwindCSS / DaisyUI / Swiper
 - Axios
 - React Router DOM
 - React-toastify
 - Context API
-- DaisyUI
-- Swiper
+- Firebase Auth
 
 ## ▶️ วิธีรันโปรเจค
 ```bash
