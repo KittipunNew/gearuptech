@@ -1,8 +1,9 @@
+import { useContext } from 'react';
+import { OrderContext } from './../../context/OrderContext';
+import OrderCard from './OrderCard';
+
 const Delivered = () => {
-  return (
-    <div>
-      <p>Delivered</p>
-    </div>
-  );
+  const { delivered } = useContext(OrderContext);
+  return <OrderCard orders={delivered} />;
 };
 export default Delivered;

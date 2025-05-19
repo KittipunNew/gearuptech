@@ -38,13 +38,52 @@ export const OrderProvider = ({ children }) => {
     return orderList?.filter((item) => item.orderStatus === 'pending');
   }, [orderList]);
 
+  const processing = useMemo(() => {
+    return orderList?.filter((item) => item.orderStatus === 'processing');
+  }, [orderList]);
+
+  const shipped = useMemo(() => {
+    return orderList?.filter((item) => item.orderStatus === 'shipped');
+  }, [orderList]);
+
+  const delivered = useMemo(() => {
+    return orderList?.filter((item) => item.orderStatus === 'delivered');
+  }, [orderList]);
+
   const pendingCount = useMemo(() => {
     if (!pending) return;
     return pending.length.toString();
   }, [pending]);
 
+  const processingCount = useMemo(() => {
+    if (!processing) return;
+    return processing.length.toString();
+  }, [processing]);
+
+  const shippedCount = useMemo(() => {
+    if (!shipped) return;
+    return shipped.length.toString();
+  }, [shipped]);
+
+  const deliveredCount = useMemo(() => {
+    if (!delivered) return;
+    return delivered.length.toString();
+  }, [delivered]);
+
   return (
-    <OrderContext.Provider value={{ fetchOrder, pending, pendingCount }}>
+    <OrderContext.Provider
+      value={{
+        fetchOrder,
+        pending,
+        processing,
+        shipped,
+        delivered,
+        pendingCount,
+        processingCount,
+        shippedCount,
+        deliveredCount,
+      }}
+    >
       {children}
     </OrderContext.Provider>
   );

@@ -112,6 +112,10 @@ export const CartProvider = ({ children }) => {
   // เพิ่มสินค้าลงตะกร้า
   const addToCart = async (productId, quantity = 1) => {
     try {
+      if (!userDetails || !userDetails._id) {
+        toast.warning('⚠️ Please login.');
+        return;
+      }
       const token = await getToken();
 
       const response = await axios.post(
