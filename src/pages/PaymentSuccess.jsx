@@ -1,10 +1,43 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { motion, useAnimation } from 'framer-motion';
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
+import { backendUrl } from '../App';
+import { AuthContext } from '../context/AuthContext';
 
 const PaymentSuccess = () => {
+  const [orderInfo, setOrderInfo] = useState(null);
   const controls = useAnimation();
   const confettiRef = useRef(null);
+  const [searchParams] = useSearchParams();
+  const { getToken } = useContext(AuthContext);
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    console.log('🔍 sessionId:', sessionId); // <== เพิ่มตรงนี้
+    if (!sessionId) return;
+
+    const fetchOrder = async () => {
+      try {
+        const token = await getToken();
+        const response = await axios.get(
+          `${backendUrl}/api/session/${sessionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log('🎯 Order info response:', response.data);
+        setOrderInfo(response.data);
+      } catch (err) {
+        console.error('Failed to fetch order info:', err);
+      }
+    };
+
+    fetchOrder();
+  }, []);
 
   useEffect(() => {
     // Main animation sequence
@@ -107,15 +140,19 @@ const PaymentSuccess = () => {
         >
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Order ID:</span>
-            <span className="font-medium">#123456</span>
+            <span className="font-medium">#{orderInfo?.shortOrderId}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Amount:</span>
-            <span className="font-medium">$99.00</span>
+            <span className="font-medium">
+              ${(orderInfo?.totalAmount / 100).toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Date:</span>
-            <span className="font-medium">May 16, 2023</span>
+            <span className="font-medium">
+              {new Date(orderInfo?.createdAt).toLocaleString()}
+            </span>
           </div>
         </motion.div>
 

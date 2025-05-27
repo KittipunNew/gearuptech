@@ -1,10 +1,35 @@
 import { useEffect, useRef } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { motion, useAnimation } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 const CODSuccessPage = () => {
   const controls = useAnimation();
   const confettiRef = useRef(null);
+  const { state } = useLocation();
+  const { shortOrderId, totalAmount, createdAt } = state || {};
+
+  // แปลงวันที่ (optional)
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    // แปลงวันที่
+    const formattedDate = date.toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    // แปลงเวลาแบบ 24 ชั่วโมง เช่น 14:30:15
+    const formattedTime = date.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false, // ใช้เวลาแบบ 24 ชั่วโมง ถ้าอยาก AM/PM ให้เปลี่ยนเป็น true
+    });
+
+    return `${formattedDate} ${formattedTime}`;
+  };
 
   useEffect(() => {
     // Main animation sequence
@@ -106,15 +131,15 @@ const CODSuccessPage = () => {
         >
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Order ID:</span>
-            <span className="font-medium">#123456</span>
+            <span className="font-medium">#{shortOrderId}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span className="text-gray-600">Amount:</span>
-            <span className="font-medium">$99.00</span>
+            <span className="font-medium">฿{totalAmount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Date:</span>
-            <span className="font-medium">May 16, 2023</span>
+            <span className="font-medium">{formatDate(createdAt)}</span>
           </div>
         </motion.div>
 

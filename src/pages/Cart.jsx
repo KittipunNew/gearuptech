@@ -88,7 +88,7 @@ const Cart = () => {
 
         // ชำระเงินปลายทาง
       } else if (paymentMethod === 'cod') {
-        await axios.post(
+        const response = await axios.post(
           `${backendUrl}/api/create-cod-order/${userDetails._id}`,
           {
             cartList,
@@ -101,9 +101,17 @@ const Cart = () => {
           }
         );
 
+        const { shortOrderId, totalAmount } = response.data.order;
+
         toast.success('✅ COD order placed successfully.');
         clearCart();
-        navigate('/place-order-success');
+        navigate('/place-order-success', {
+          state: {
+            shortOrderId,
+            totalAmount,
+            createdAt: response.data.order.createdAt,
+          },
+        });
       }
     } catch (error) {
       console.error(error);
